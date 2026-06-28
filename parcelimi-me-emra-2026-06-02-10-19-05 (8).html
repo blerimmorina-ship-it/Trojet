@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="sq"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Realistic 3D · Parcelimi</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#e9eef3;
+    --panel:rgba(255,255,255,.78);
+    --ink:#17212b;
+    --muted:#667381;
+    --line:rgba(23,33,43,.14);
+    --accent:#bd8a32;
+    --accent-2:#0f3358;
+    --accent-soft:rgba(189,138,50,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 0%, #f7fbff 0%, var(--bg) 42%, #dfe7ef 100%);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+  #app{position:fixed;inset:0}
+  canvas{display:block;cursor:grab}
+  canvas:active{cursor:grabbing}
+  canvas.pointer{cursor:pointer}
+
+  .topbar{
+    position:absolute;left:18px;right:18px;top:16px;z-index:10;
+    display:flex;justify-content:space-between;gap:16px;align-items:flex-start;
+    pointer-events:none
+  }
+  .brand,.panel{
+    pointer-events:auto;background:var(--panel);backdrop-filter:blur(12px);
+    border:1px solid var(--line);box-shadow:0 18px 55px rgba(20,34,48,.13);
+    border-radius:16px
+  }
+  .brand{padding:18px 20px;min-width:390px;overflow:hidden;position:relative}
+  .brand:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(189,138,50,.16),transparent 45%,rgba(15,51,88,.08));pointer-events:none}
+  .kicker{
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:6px
+  }
+  h1{position:relative;font-size:28px;line-height:1.05;letter-spacing:-.035em;font-weight:700}
+  .sub{position:relative;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);margin-top:8px}
+
+  .metrics{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .metric{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+    min-width:104px;text-align:right;box-shadow:0 10px 30px rgba(40,50,60,.07)
+  }
+  .metric span{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+  .metric b{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;margin-top:4px;color:var(--ink)}
+
+  .left-panel{
+    position:absolute;top:126px;left:18px;z-index:10;width:270px;padding:16px
+  }
+  .panel h3{
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:12px
+  }
+  .legend-row{display:flex;align-items:center;gap:9px;font-size:12px;color:#2f3740;margin:8px 0}
+  .sw{width:16px;height:12px;border:1px solid rgba(0,0,0,.18);border-radius:2px;background:#ddd;flex:0 0 auto}
+  .sw.concrete{background:#d9dce0}
+  .sw.glass{background:#8fa8bd}
+  .sw.asphalt{background:#33383e}
+  .sw.green{background:#b9c9ac}
+  .sw.bound{background:#fff;border:2px solid #30343a}
+  .stat{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:7px 0;font-family:"JetBrains Mono",monospace;font-size:11px}
+  /* Teksti i mbetur i legjendës 20% më i madh */
+  .left-panel h3{font-size:12px}
+  .left-panel .stat{font-size:13.2px}
+  .stat span:first-child{color:var(--muted)}
+  .stat span:last-child{color:var(--ink);font-weight:600}
+
+  .availability-panel{
+    position:absolute;top:18px;left:18px;z-index:22;width:min(720px,calc(100vw - 36px));
+    display:none;padding:18px 18px 16px;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);
+    border:1px solid rgba(189,138,50,.32);border-radius:18px;box-shadow:0 22px 70px rgba(15,35,55,.18);
+    transform-origin:top left
+  }
+  body.ui-hidden .availability-panel{display:block;transform:scale(.6)}
+  .availability-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:12px}
+  .availability-head h2{
+    font-size:14px;line-height:1.05;letter-spacing:-.02em;font-weight:700;color:var(--accent-2)
+  }
+  .availability-head small{
+    display:block;margin-top:5px;font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent)
+  }
+  .availability-summary{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:190px}
+  .availability-pill{
+    padding:6px 8px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.76);
+    font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)
+  }
+  .availability-table-wrap{max-height:calc(100vh - 130px);overflow:auto;padding-right:2px}
+  .availability-table{width:100%;border-collapse:separate;border-spacing:0 7px}
+  .availability-table th{
+    padding:0 8px 4px;text-align:left;font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted)
+  }
+  .availability-table td{
+    border:0;padding:7px 8px;background:rgba(248,250,252,.94);font-size:12px;line-height:1.12;font-weight:700;color:var(--ink)
+  }
+  .availability-table td:first-child{
+    border-radius:10px 0 0 10px;width:58px;font-family:"JetBrains Mono",monospace;font-size:14px;color:var(--accent-2)
+  }
+  .availability-table td:nth-child(2){font-size:14px}
+  .availability-table td:last-child{
+    border-radius:0 10px 10px 0;text-align:right;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);white-space:nowrap
+  }
+  .availability-table td:nth-child(3){
+    font-family:"JetBrains Mono",monospace;font-size:19.2px;color:var(--accent-2);white-space:nowrap
+  }
+  .availability-table td:nth-child(3) small{display:block;margin-top:3px;font-size:12.8px;color:var(--muted);font-weight:700}
+  .availability-table tr.sold td{background:rgba(241,246,255,.96)}
+  .availability-table tr.free td{background:rgba(244,251,240,.96)}
+  .availability-status{
+    display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:5px 8px;font-size:8px;letter-spacing:.06em;text-transform:uppercase
+  }
+  .availability-status.sold{background:rgba(45,108,223,.10);color:#2459b8}
+  .availability-status.free{background:rgba(98,157,86,.13);color:#4e7750}
+  /* Sipërfaqja shihet gjithmonë; çmimi i parcelave të shitura fshihet, shfaqet me klikim. */
+  .availability-table td.price-cell.locked{cursor:pointer;user-select:none}
+  .availability-table td.price-cell .surface{display:block}
+  .availability-table td.price-cell .price-real,
+  .availability-table td.price-cell .price-mask{
+    display:block;margin-top:3px;font-size:12.8px;color:var(--muted);font-weight:700
+  }
+  .availability-table td.price-cell .price-mask{letter-spacing:.12em}
+  .availability-table td.price-cell.locked .price-real{display:none}
+  .availability-table td.price-cell.locked.revealed .price-real{display:block}
+  .availability-table td.price-cell.locked.revealed .price-mask{display:none}
+  @media(max-width:760px){
+    .availability-panel{top:12px;left:12px;width:calc(100vw - 24px);padding:14px}
+    .availability-head{display:block}
+    .availability-summary{justify-content:flex-start;margin-top:10px}
+    .availability-table td{font-size:11px}
+    .availability-table td:first-child,.availability-table td:nth-child(2){font-size:13px}
+    .availability-table td:nth-child(3){font-size:17.6px}
+    .availability-table td:nth-child(3) small{font-size:12px}
+    .availability-table td:last-child{font-size:8px}
+  }
+
+
+  /* Update: all table columns use the same visual font size as “Çmimi truallit”,
+     and the hidden-UI table expands vertically to show all parcels in one view. */
+  body.ui-hidden .availability-panel{
+    width:min(940px,calc(100vw - 36px));
+    max-height:none;
+    padding:14px 14px 12px;
+  }
+  body.ui-hidden .availability-table-wrap{
+    max-height:none;
+    overflow:visible;
+    padding-right:0;
+  }
+  body.ui-hidden .availability-table{
+    border-spacing:0 4px;
+  }
+  body.ui-hidden .availability-table th{
+    padding:0 6px 3px;
+    font-size:8px;
+  }
+  body.ui-hidden .availability-table td{
+    padding:4px 7px;
+    line-height:1.03;
+    font-size:19.2px!important;
+  }
+  body.ui-hidden .availability-table td:first-child,
+  body.ui-hidden .availability-table td:nth-child(2),
+  body.ui-hidden .availability-table td:nth-child(3),
+  body.ui-hidden .availability-table td:last-child{
+    font-size:19.2px!important;
+  }
+  body.ui-hidden .availability-status{
+    font-size:19.2px!important;
+    line-height:1;
+    padding:3px 7px;
+  }
+  body.ui-hidden .availability-table td:nth-child(3) small{
+    font-size:12.8px!important;
+    line-height:1;
+    margin-top:1px;
+  }
+  body.ui-hidden .availability-table td.price-cell .price-real,
+  body.ui-hidden .availability-table td.price-cell .price-mask{
+    font-size:12.8px!important;line-height:1;margin-top:2px;
+  }
+
+  .controls{
+    position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:10;
+    display:flex;gap:6px;align-items:center;padding:7px;max-width:calc(100% - 36px);
+    background:var(--panel);backdrop-filter:blur(12px);border:1px solid var(--line);
+    border-radius:12px;box-shadow:0 12px 36px rgba(40,50,60,.12)
+  }
+  button{
+    border:1px solid transparent;background:transparent;color:var(--muted);
+    font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.09em;
+    text-transform:uppercase;padding:9px 12px;border-radius:8px;cursor:pointer;white-space:nowrap
+  }
+  button:hover{background:var(--accent-soft);color:var(--ink)}
+  button.active{background:linear-gradient(135deg,var(--accent),#d7a64d);color:white;box-shadow:0 8px 18px rgba(189,138,50,.24)}
+  .divider{height:24px;width:1px;background:var(--line);margin:0 2px}
+
+  .info{
+    position:absolute;right:18px;bottom:82px;z-index:10;width:210px;padding:14px 16px;
+    opacity:0;transform:translateY(8px);transition:.2s ease;pointer-events:none
+  }
+  .info.visible{opacity:1;transform:none}
+  .info small{font-family:"JetBrains Mono",monospace;color:var(--accent);letter-spacing:.16em;font-size:9px;font-weight:600}
+  .info .id{font-size:28px;font-weight:700;margin:5px 0}
+  .info-row{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);padding-top:4px}
+  .info-row b{color:var(--ink)}
+
+  .modal-backdrop{
+    position:fixed;inset:0;z-index:30;background:rgba(35,40,45,.38);backdrop-filter:blur(4px);
+    opacity:0;pointer-events:none;transition:.25s ease
+  }
+  .modal-backdrop.visible{opacity:1;pointer-events:auto}
+  .modal{
+    position:fixed;z-index:31;top:50%;left:50%;transform:translate(-50%,-48%);
+    width:min(720px,calc(100% - 36px));max-height:86vh;overflow:hidden;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 30px 90px rgba(20,25,30,.28);
+    opacity:0;pointer-events:none;transition:.28s ease;display:flex;flex-direction:column
+  }
+  .modal.visible{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+  .modal-head{
+    display:flex;justify-content:space-between;gap:16px;padding:22px 24px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#fff,#f7f8fa)
+  }
+  .modal-head h2{font-size:34px;letter-spacing:-.04em}
+  .modal-head p{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:5px}
+  .close{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;font-size:18px;line-height:1;color:var(--muted)}
+  .modal-body{padding:22px 24px;display:grid;grid-template-columns:1fr 1fr;gap:22px;overflow:auto}
+  .floor{
+    aspect-ratio:4/3;background:#f4f1eb;border:1px solid #cdd2d8;border-radius:10px;padding:12px
+  }
+  .floor svg{width:100%;height:100%}
+  .detail h4{
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:10px
+  }
+  .price{font-size:32px;font-weight:700;letter-spacing:-.03em;margin-bottom:2px}
+  .price-sub{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);margin-bottom:16px}
+  table{width:100%;border-collapse:collapse}
+  td{padding:9px 0;border-bottom:1px dashed var(--line);font-size:13px}
+  td:first-child{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted)}
+  td:last-child{text-align:right;font-weight:600}
+  .modal-foot{display:flex;justify-content:space-between;gap:12px;padding:16px 24px;border-top:1px solid var(--line);background:#f8f9fb}
+  .modal-foot small{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted)}
+  .show-ui{
+    position:absolute;right:12px;bottom:12px;z-index:20;display:none;
+    background:var(--accent);color:white;border-radius:999px;
+    box-shadow:0 12px 30px rgba(40,50,60,.18)
+  }
+  .buyer-editor{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#fafbfd}
+  .buyer-editor h5{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  .buyer-grid{display:grid;grid-template-columns:1fr 120px;gap:10px;align-items:center}
+  .inline-input,.inline-select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;font:500 13px Inter,system-ui,sans-serif;color:var(--ink);outline:none}
+  .inline-input:focus,.inline-select:focus{border-color:rgba(45,108,223,.45);box-shadow:0 0 0 3px rgba(45,108,223,.08)}
+  .buyer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+  .chip.free{background:rgba(98,157,86,.12);color:#4e7750}
+  .chip.sold{background:rgba(45,108,223,.10);color:#2459b8}
+  .helper{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.45}
+
+  .cinema-overlay{
+    position:fixed;inset:0;z-index:4;pointer-events:none;opacity:1;transition:.28s ease;
+    background:
+      radial-gradient(circle at 50% 45%, transparent 0%, transparent 48%, rgba(9,18,28,.18) 100%),
+      linear-gradient(180deg,rgba(5,12,20,.10),transparent 18%,transparent 80%,rgba(5,12,20,.12));
+    mix-blend-mode:multiply
+  }
+  body.cinematic-off .cinema-overlay{opacity:0}
+  .render-badge{
+    position:absolute;left:18px;bottom:82px;z-index:9;pointer-events:none;
+    padding:10px 13px;border-radius:999px;border:1px solid rgba(189,138,50,.28);
+    background:rgba(255,255,255,.72);backdrop-filter:blur(14px);box-shadow:0 14px 40px rgba(20,34,48,.10);
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-2)
+  }
+  body.ui-hidden .render-badge{display:none!important}
+  body.render-hero .topbar,
+  body.render-hero .left-panel,
+  body.render-hero .availability-panel,
+  body.render-hero .controls,
+  body.render-hero .show-ui,
+  body.render-hero .info,
+  body.render-hero .render-badge,
+  body.render-hero .toast,
+  body.render-hero .modal,
+  body.render-hero .modal-backdrop{
+    display:none!important
+  }
+  .toast{
+    position:fixed;left:50%;top:86px;transform:translate(-50%,-8px);z-index:60;opacity:0;pointer-events:none;
+    background:rgba(20,32,44,.88);color:white;padding:11px 14px;border-radius:999px;
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.10em;text-transform:uppercase;
+    box-shadow:0 16px 50px rgba(10,20,30,.25);transition:.24s ease
+  }
+  .toast.visible{opacity:1;transform:translate(-50%,0)}
+  body.ui-hidden .topbar,
+  body.ui-hidden .left-panel,
+  body.ui-hidden .metrics,
+  body.ui-hidden .info,
+  body.ui-hidden .controls{display:none!important}
+  body.ui-hidden .show-ui{display:block}
+
+  @media(max-width:760px){
+    .topbar{left:12px;right:12px;top:10px;flex-direction:column;gap:8px}
+    .brand{min-width:0;width:100%;padding:10px 12px;border-radius:12px;box-shadow:0 6px 18px rgba(40,50,60,.06)}
+    .kicker{font-size:9px;letter-spacing:.18em;margin-bottom:5px}
+    h1{font-size:22px;line-height:1.05}
+    .sub{font-size:10px;line-height:1.45;margin-top:6px}
+    .metrics{display:none}.left-panel{display:none}
+    .modal-body{grid-template-columns:1fr}
+    .controls{bottom:10px;padding:5px;gap:4px;overflow:auto;justify-content:flex-start;border-radius:12px}
+    button{font-size:9px;padding:7px 9px}
+    .info{display:none}
+  }
+
+  /* Butoni i printimit në krye të listës */
+  .print-btn{
+    margin-top:10px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+    font:inherit;font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--accent-2);
+    background:rgba(45,108,223,.08);border:1px solid rgba(45,108,223,.28);
+    border-radius:999px;padding:6px 12px;line-height:1
+  }
+  .print-btn:hover{background:rgba(45,108,223,.16)}
+
+  /* Printim: vetëm tabela, e kompaktuar që të hyjë në një faqe të vetme dhe e pozicionuar mirë */
+  @media print{
+    @page{size:A4 portrait;margin:14mm}
+    html,body{background:#fff!important;height:auto!important;min-height:0!important;overflow:visible!important}
+    body>*{display:none!important}
+    body>#availability-panel{display:block!important}
+    #availability-panel{
+      position:static!important;left:auto!important;top:auto!important;right:auto!important;bottom:auto!important;
+      width:100%!important;max-width:180mm!important;max-height:none!important;margin:0 auto!important;
+      padding:0!important;box-shadow:none!important;backdrop-filter:none!important;border:0!important;
+      background:#fff!important
+    }
+    .availability-head{margin-bottom:8px!important}
+    .availability-panel h2{font-size:15px!important;margin:0!important}
+    .availability-panel .availability-head small{font-size:10px!important}
+    .availability-summary{margin-top:6px!important;gap:8px!important}
+    .availability-table-wrap{max-height:none!important;overflow:visible!important;padding:0!important}
+    .availability-table{width:100%!important;border-spacing:0 3px!important;page-break-inside:avoid!important;break-inside:avoid!important}
+    .availability-table thead{display:table-header-group!important}
+    .availability-table tr{page-break-inside:avoid!important;break-inside:avoid!important}
+    .availability-table th{font-size:7.5px!important;padding:0 6px 2px!important}
+    .availability-table td{padding:3px 6px!important;font-size:10px!important;line-height:1.12!important}
+    .availability-table td:first-child{width:42px!important;font-size:10.5px!important}
+    .availability-table td:nth-child(2){font-size:10.5px!important}
+    .availability-table td.price-cell .surface{font-size:11px!important}
+    .availability-table td.price-cell .price-real,
+    .availability-table td.price-cell .price-mask{font-size:9px!important;margin-top:1px!important}
+    .availability-table td:last-child{font-size:8px!important}
+    .availability-status{padding:2px 6px!important;font-size:8px!important}
+    .no-print{display:none!important}
+    *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="cinema-overlay"></div>
+<div class="render-badge" id="render-badge">Realistic render · golden light · soft shadows</div>
+<div class="toast" id="toast">U ruajt</div>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="kicker">Premium Architectural Visualization</div>
+    <h1>Lagje Rezidenciale · Parcelimi 3D</h1>
+    <div class="sub">Render cinematic · status parcelash · sipërfaqe P+1 · eksport PNG/CSV</div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><span>Sipërfaqja</span><b>~152 ari</b></div>
+    <div class="metric"><span>Vila</span><b>18</b></div>
+    <div class="metric"><span>Në shitje</span><b id="metric-free">8</b></div>
+    <div class="metric"><span>Të shitura</span><b id="metric-sold">10</b></div>
+  </div>
+</div>
+
+<section class="availability-panel" id="availability-panel">
+  <div class="availability-head">
+    <div>
+      <h2>Lista e Pronave</h2>
+      <small>Të shitura dhe në dispozicion</small>
+    </div>
+    <div class="availability-summary">
+      <span class="availability-pill">Të lira: <b id="availability-free">8</b></span>
+      <span class="availability-pill">Të shitura: <b id="availability-sold">10</b></span>
+      <button type="button" class="print-btn no-print" id="print-table-btn" title="Printo listën e pronave">🖨 Printo tabelën</button>
+    </div>
+  </div>
+  <div class="availability-table-wrap">
+    <table class="availability-table">
+      <thead>
+        <tr><th>Parcela</th><th>Pronari / Statusi</th><th>Sipërfaqja / Çmimi</th><th>Gjendja</th></tr>
+      </thead>
+      <tbody id="availability-list"><tr class="sold">
+      <td>P1</td>
+      <td>Dr. Ardian Puzhegu</td>
+      <td class="price-cell locked"><span class="surface">500 m² · 5 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€25,000 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr><tr class="free">
+      <td>P2</td>
+      <td>E Lirë</td>
+      <td class="price-cell"><span class="surface">625 m² · 6.25 ari</span><span class="price-real">€31,250 · €5,000/ari</span></td>
+      <td><span class="availability-status free">Në dispozicion</span></td>
+    </tr><tr class="sold">
+      <td>P3</td>
+      <td>Dr. Ardian Puzhegu</td>
+      <td class="price-cell locked"><span class="surface">750 m² · 7.5 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€37,500 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr><tr class="free">
+      <td>P4</td>
+      <td>E Lirë</td>
+      <td class="price-cell"><span class="surface">1,000 m² · 10 ari</span><span class="price-real">€50,000 · €5,000/ari</span></td>
+      <td><span class="availability-status free">Në dispozicion</span></td>
+    </tr><tr class="free">
+      <td>P5</td>
+      <td>E Lirë</td>
+      <td class="price-cell"><span class="surface">1,000 m² · 10 ari</span><span class="price-real">€50,000 · €5,000/ari</span></td>
+      <td><span class="availability-status free">Në dispozicion</span></td>
+    </tr><tr class="free">
+      <td>P6</td>
+      <td>E Lirë</td>
+      <td class="price-cell"><span class="surface">1,000 m² · 10 ari</span><span class="price-real">€50,000 · €5,000/ari</span></td>
+      <td><span class="availability-status free">Në dispozicion</span></td>
+    </tr><tr class="sold">
+      <td>P7</td>
+      <td>Blerim Morina</td>
+      <td class="price-cell locked"><span class="surface">750 m² · 7.5 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€37,500 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr><tr class="free">
+      <td>P8</td>
+      <td>E Lirë</td>
+      <td class="price-cell"><span class="surface">625 m² · 6.25 ari</span><span class="price-real">€31,250 · €5,000/ari</span></td>
+      <td><span class="availability-status free">Në dispozicion</span></td>
+    </tr><tr class="sold">
+      <td>P9</td>
+      <td>Blerim Morina</td>
+      <td class="price-cell locked"><span class="surface">500 m² · 5 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€25,000 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr><tr class="free">
+      <td>P10</td>
+      <td>E Lirë</td>
+      <td class="price-cell"><span class="surface">500 m² · 5 ari</span><span class="price-real">€25,000 · €5,000/ari</span></td>
+      <td><span class="availability-status free">Në dispozicion</span></td>
+    </tr><tr class="free">
+      <td>P11</td>
+      <td>E Lirë</td>
+      <td class="price-cell"><span class="surface">625 m² · 6.25 ari</span><span class="price-real">€31,250 · €5,000/ari</span></td>
+      <td><span class="availability-status free">Në dispozicion</span></td>
+    </tr><tr class="sold">
+      <td>P12</td>
+      <td>Dr. Ardian Puzhegu</td>
+      <td class="price-cell locked"><span class="surface">750 m² · 7.5 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€37,500 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr><tr class="free">
+      <td>P13</td>
+      <td>E Lirë</td>
+      <td class="price-cell"><span class="surface">1,000 m² · 10 ari</span><span class="price-real">€50,000 · €5,000/ari</span></td>
+      <td><span class="availability-status free">Në dispozicion</span></td>
+    </tr><tr class="sold">
+      <td>P14</td>
+      <td>Dr. Afrim Muhaxhiri</td>
+      <td class="price-cell locked"><span class="surface">1,000 m² · 10 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€50,000 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr><tr class="sold">
+      <td>P15</td>
+      <td>Dr. Afrim Muhaxhiri</td>
+      <td class="price-cell locked"><span class="surface">1,000 m² · 10 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€50,000 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr><tr class="sold">
+      <td>P16</td>
+      <td>Dr. Arber Morina</td>
+      <td class="price-cell locked"><span class="surface">750 m² · 7.5 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€37,500 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr><tr class="sold">
+      <td>P17</td>
+      <td>Dr. Afrim Muhaxhiri</td>
+      <td class="price-cell locked"><span class="surface">625 m² · 6.25 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€31,250 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr><tr class="sold">
+      <td>P18</td>
+      <td>Dr. Afrim Muhaxhiri</td>
+      <td class="price-cell locked"><span class="surface">500 m² · 5 ari</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">€25,000 · €5,000/ari</span></td>
+      <td><span class="availability-status sold">E shitur</span></td>
+    </tr></tbody>
+    </table>
+  </div>
+</section>
+
+<aside class="panel left-panel">
+  <h3>Legjenda Teknike</h3>
+  <div class="stat"><span>Parcela 5 ari</span><span>× 4</span></div>
+  <div class="stat"><span>Parcela 6.25 ari</span><span>× 4</span></div>
+  <div class="stat"><span>Parcela 7.5 ari</span><span>× 4</span></div>
+  <div class="stat"><span>Parcela 10 ari</span><span>× 6</span></div>
+  <div class="stat"><span>Të lira</span><span id="stat-free">8</span></div>
+  <div class="stat"><span>Të shitura</span><span id="stat-sold">10</span></div>
+</aside>
+
+<div class="controls">
+  <button class="" data-view="technical">Technical View</button>
+  <button data-view="top">Plan</button>
+  <button data-view="iso">Iso</button>
+  <button data-view="perspective" class="active">Perspective</button>
+  <button data-view="street">Street</button>
+  <div class="divider"></div>
+  <button id="clay-btn" class="active">Premium Materials</button>
+  <button id="cinematic-btn" class="active">Cinematic</button>
+  <button id="export-png-btn">Export PNG</button>
+  <button id="export-csv-btn">Export CSV</button>
+  <button id="export-html-btn">HTML me Emra</button>
+  <button id="hide-ui-btn">Hide UI</button>
+</div>
+<button class="show-ui" id="show-ui-btn">Show UI</button>
+
+<div class="panel info" id="info">
+  <small>KLIKO PËR DETAJE</small>
+  <div class="id" id="info-id">P6</div>
+  <div class="info-row"><span>Sip.</span><b id="info-area">10 ari</b></div>
+  <div class="info-row"><span>Tip</span><b id="info-type">C</b></div>
+  <div class="info-row"><span>Status</span><b id="info-status">E LIRË</b></div>
+  <div class="info-row"><span>Blerësi</span><b id="info-buyer">—</b></div>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop"></div>
+<div class="modal" id="modal">
+  <div class="modal-head">
+    <div>
+      <p id="m-sub">VILA · TIP C</p>
+      <h2>Parcela <span id="m-id">P8</span></h2>
+    </div>
+    <button class="close" id="close-modal">×</button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <div class="detail"><h4>Planimetria skematike</h4></div>
+      <div class="floor" id="floor-plan"><svg viewBox="0 0 126 100" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1" y="1" width="124" height="98" fill="#f4f1eb" stroke="#2f3740" stroke-width="1.5"></rect><rect x="0" y="0" width="69.30000000000001" height="55.00000000000001" fill="none" stroke="#6b737c" stroke-width=".75"></rect>
+    <text x="34.650000000000006" y="27.500000000000004" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono" font-size="4.2" fill="#2f3740">LIVING</text><rect x="69.30000000000001" y="0" width="56.7" height="34" fill="none" stroke="#6b737c" stroke-width=".75"></rect>
+    <text x="97.65" y="17" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono" font-size="4.2" fill="#2f3740">KUZHINË</text><rect x="69.30000000000001" y="34" width="56.7" height="21" fill="none" stroke="#6b737c" stroke-width=".75"></rect>
+    <text x="97.65" y="44.5" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono" font-size="4.2" fill="#2f3740">NGRËNIE</text><rect x="0" y="55.00000000000001" width="40.32" height="45" fill="none" stroke="#6b737c" stroke-width=".75"></rect>
+    <text x="20.16" y="77.5" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono" font-size="4.2" fill="#2f3740">DHOMË</text><rect x="40.32" y="55.00000000000001" width="28.98" height="45" fill="none" stroke="#6b737c" stroke-width=".75"></rect>
+    <text x="54.81" y="77.5" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono" font-size="4.2" fill="#2f3740">BANJË</text><rect x="69.30000000000001" y="55.00000000000001" width="56.7" height="45" fill="none" stroke="#6b737c" stroke-width=".75"></rect>
+    <text x="97.65" y="77.5" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono" font-size="4.2" fill="#2f3740">DHOMË</text><text x="118" y="10" text-anchor="middle" font-family="JetBrains Mono" font-size="5" fill="#1f6fe5">V</text>
+  <path d="M 118 14 L 116 20 L 118 18 L 120 20 Z" fill="#1f6fe5"></path>
+  </svg></div>
+    </div>
+    <div class="detail">
+      <h4>Specifikime teknike</h4>
+      <div class="price" id="m-price">€31,250</div>
+      <div class="price-sub" id="m-price-sub">Çmimi truallit · 6.25 ari × €5,000 / ari</div>
+      <table>
+        <tbody><tr><td>Parcela</td><td id="m-area">625 m² (6.25 ari)</td></tr>
+        <tr><td>Statusi</td><td id="m-status">E Lirë</td></tr>
+        <tr><td>Blerësi</td><td id="m-buyer">—</td></tr>
+        <tr><td>Objekti total</td><td id="m-house">310 m²</td></tr>
+        <tr><td>Përdhesa</td><td id="m-ground">155 m²</td></tr>
+        <tr><td>Kati P1</td><td id="m-first">155 m²</td></tr>
+        <tr><td>Kate</td><td>P + 1</td></tr>
+        <tr><td>Dhoma gjumi</td><td id="m-bed">3</td></tr>
+        <tr><td>Banjë</td><td id="m-bath">2</td></tr>
+        <tr><td>Garazh</td><td id="m-garage">Parking i jashtëm</td></tr>
+        <tr><td>Pishinë</td><td id="m-pool">Jo</td></tr>
+        <tr><td>Tipologjia</td><td id="m-style">Volumetri C</td></tr>
+      </tbody></table>
+      <div class="buyer-editor">
+        <h5>Statusi / Blerësi</h5>
+        <div class="buyer-grid">
+          <input id="buyer-input" class="inline-input" type="text" placeholder="Shkruaj emrin e blerësit">
+          <select id="status-select" class="inline-select">
+            <option value="free">E Lirë</option>
+            <option value="sold">E Shitur</option>
+          </select>
+        </div>
+        <div class="buyer-actions">
+          <button id="save-buyer-btn">Ruaj</button>
+          <button id="clear-buyer-btn">Rikthe në E Lirë</button>
+          <span id="buyer-chip" class="chip free">E Lirë</span>
+        </div>
+        <div class="helper">Nëse vendoset emri i blerësit, parcela shënohet si e shitur. Për t’i bartur emrat në telefon, kliko “HTML me Emra” dhe dërgo atë file të ri.</div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <small>Model teknik 3D · Matjet janë të paraqitura si skemë vizuale.</small>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button id="modal-export-btn">Export PNG</button><button id="modal-html-btn">HTML me Emra</button></div>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports":{
+    "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const app = document.getElementById('app');
+const scene = new THREE.Scene();
+const IS_HERO_RENDER = new URLSearchParams(window.location.search).has('heroRender');
+if(IS_HERO_RENDER) document.body.classList.add('render-hero');
+
+function makeGradientBackground(){
+  const c=document.createElement('canvas'); c.width=16; c.height=512;
+  const ctx=c.getContext('2d');
+  const g=ctx.createLinearGradient(0,0,0,512);
+  g.addColorStop(0,'#fff0d2');
+  g.addColorStop(.24,'#dfeefa');
+  g.addColorStop(.58,'#b9cedd');
+  g.addColorStop(1,'#8faaba');
+  ctx.fillStyle=g; ctx.fillRect(0,0,16,512);
+  const t=new THREE.CanvasTexture(c);
+  t.colorSpace=THREE.SRGBColorSpace;
+  return t;
+}
+scene.background = makeGradientBackground();
+scene.fog = new THREE.FogExp2(0xd9e5ec, 0.00122);
+
+const aspect = window.innerWidth / window.innerHeight;
+const perspCam = new THREE.PerspectiveCamera(38, aspect, .2, 2500);
+const orthoSize = 210;
+const orthoCam = new THREE.OrthographicCamera(
+  -orthoSize * aspect, orthoSize * aspect,
+  orthoSize, -orthoSize, .2, 2500
+);
+let camera = orthoCam;
+
+const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:'high-performance', preserveDrawingBuffer:true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.08;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+app.appendChild(renderer.domElement);
+
+const composer = new EffectComposer(renderer);
+const renderPass = new RenderPass(scene, camera);
+composer.addPass(renderPass);
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.10, 0.28, 0.90);
+composer.addPass(bloomPass);
+composer.addPass(new OutputPass());
+let cinematicMode = true;
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = .08;
+controls.maxPolarAngle = Math.PI/2 - .03;
+controls.minDistance = 20;
+controls.maxDistance = 900;
+
+const hemi = new THREE.HemisphereLight(0xfff4df, 0x8195a0, 1.12);
+scene.add(hemi);
+
+const sun = new THREE.DirectionalLight(0xffd49a, 4.15);
+sun.position.set(215, 190, 105);
+sun.castShadow = true;
+sun.shadow.mapSize.set(4096,4096);
+sun.shadow.camera.left = -280;
+sun.shadow.camera.right = 280;
+sun.shadow.camera.top = 220;
+sun.shadow.camera.bottom = -220;
+sun.shadow.camera.near = 1;
+sun.shadow.camera.far = 720;
+sun.shadow.bias = -0.00018;
+sun.shadow.normalBias = 0.018;
+sun.shadow.radius = 5.5;
+scene.add(sun);
+
+const fill = new THREE.DirectionalLight(0xddeeff, .38);
+fill.position.set(-160, 110, -180);
+scene.add(fill);
+const warmBounce = new THREE.PointLight(0xffc779, 26, 420, 2.05);
+warmBounce.position.set(-120, 58, 70);
+scene.add(warmBounce);
+const coolBounce = new THREE.PointLight(0xbddcff, 8, 340, 2.2);
+coolBounce.position.set(155, 70, -95);
+scene.add(coolBounce);
+
+function makeNoiseTexture(base='#dfe2e5', specks=1600, repeatX=4, repeatY=4, contrast=.045){
+  const size=256;
+  const c=document.createElement('canvas'); c.width=c.height=size;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle=base; ctx.fillRect(0,0,size,size);
+  for(let i=0;i<specks;i++){
+    const v=Math.random()<.5?0:255;
+    ctx.fillStyle=`rgba(${v},${v},${v},${Math.random()*contrast})`;
+    ctx.fillRect(Math.random()*size,Math.random()*size,1+Math.random()*1.4,1+Math.random()*1.4);
+  }
+  const t=new THREE.CanvasTexture(c);
+  t.wrapS=t.wrapT=THREE.RepeatWrapping;
+  t.repeat.set(repeatX,repeatY);
+  t.colorSpace=THREE.SRGBColorSpace;
+  return t;
+}
+function makeAsphaltTexture(){
+  const size=256,c=document.createElement('canvas'); c.width=c.height=size;
+  const ctx=c.getContext('2d');
+  const g=ctx.createLinearGradient(0,0,size,size);
+  g.addColorStop(0,'#252b2f');
+  g.addColorStop(.5,'#373d40');
+  g.addColorStop(1,'#202529');
+  ctx.fillStyle=g; ctx.fillRect(0,0,size,size);
+  for(let i=0;i<6500;i++){
+    const v=28+Math.random()*50; ctx.fillStyle=`rgba(${v},${v+2},${v+4},${0.38+Math.random()*.42})`;
+    ctx.fillRect(Math.random()*size,Math.random()*size,.8+Math.random()*1.8,.8+Math.random()*1.8);
+  }
+  for(let i=0;i<28;i++){
+    ctx.strokeStyle=`rgba(255,255,255,${.025+Math.random()*.035})`;
+    ctx.lineWidth=.5+Math.random()*1.4;
+    ctx.beginPath();
+    const y=Math.random()*size;
+    ctx.moveTo(0,y);
+    ctx.bezierCurveTo(size*.35,y+Math.random()*10-5,size*.62,y+Math.random()*10-5,size,y+Math.random()*12-6);
+    ctx.stroke();
+  }
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(18,1); t.colorSpace=THREE.SRGBColorSpace; return t;
+}
+function makeSoftGrassTexture(){
+  const size=256,c=document.createElement('canvas'); c.width=c.height=size;
+  const ctx=c.getContext('2d');
+  const base=ctx.createLinearGradient(0,0,size,size);
+  base.addColorStop(0,'#b7c9a8');
+  base.addColorStop(.52,'#d1d9bd');
+  base.addColorStop(1,'#91ad80');
+  ctx.fillStyle=base; ctx.fillRect(0,0,size,size);
+  for(let i=0;i<5200;i++){
+    const g=138+Math.random()*78; ctx.fillStyle=`rgba(${86+Math.random()*64},${g},${76+Math.random()*46},${.16+Math.random()*.22})`;
+    ctx.fillRect(Math.random()*size,Math.random()*size,.8+Math.random()*2.2,.8+Math.random()*2.2);
+  }
+  for(let i=0;i<36;i++){
+    ctx.strokeStyle=`rgba(72,110,67,${.05+Math.random()*.08})`;
+    ctx.lineWidth=1+Math.random()*2.5;
+    ctx.beginPath();
+    const y=Math.random()*size;
+    ctx.moveTo(0,y);
+    ctx.bezierCurveTo(size*.3,y+Math.random()*18-9,size*.72,y+Math.random()*18-9,size,y+Math.random()*18-9);
+    ctx.stroke();
+  }
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(7,2.4); t.colorSpace=THREE.SRGBColorSpace; return t;
+}
+function makePavingTexture(){
+  const size=256,c=document.createElement('canvas'); c.width=c.height=size;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='#c8ced1'; ctx.fillRect(0,0,size,size);
+  for(let y=0;y<size;y+=24){
+    for(let x=0;x<size;x+=48){
+      ctx.strokeStyle='rgba(83,91,96,.16)';
+      ctx.lineWidth=1;
+      ctx.strokeRect(x+(y%48?24:0),y,48,24);
+    }
+  }
+  for(let i=0;i<1800;i++){
+    const v=170+Math.random()*55;
+    ctx.fillStyle=`rgba(${v},${v+2},${v+4},.14)`;
+    ctx.fillRect(Math.random()*size,Math.random()*size,1,1);
+  }
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(16,2); t.colorSpace=THREE.SRGBColorSpace; return t;
+}
+const texture = {
+  concrete: makeNoiseTexture('#e8e4dc',2600,3,3,.04),
+  concrete2: makeNoiseTexture('#c8d0d4',2500,3,3,.038),
+  roof: makeNoiseTexture('#7b858b',2200,3,3,.04),
+  base: makeNoiseTexture('#c7d2c4',2400,7,4,.035),
+  grass: makeSoftGrassTexture(),
+  asphalt: makeAsphaltTexture(),
+  paving: makePavingTexture()
+};
+
+const mats = {
+  ground: new THREE.MeshStandardMaterial({ color:0xcddbc8, roughness:.96 }),
+  base: new THREE.MeshStandardMaterial({ map:texture.base, color:0xffffff, roughness:.9 }),
+  parcel: new THREE.MeshStandardMaterial({ map:texture.grass, color:0xffffff, roughness:.93 }),
+  road: new THREE.MeshStandardMaterial({ map:texture.asphalt, color:0xffffff, roughness:.76, metalness:.025 }),
+  roadLine: new THREE.MeshStandardMaterial({ color:0xf1e7c8, roughness:.58, emissive:0x33260d, emissiveIntensity:.04 }),
+  concrete: new THREE.MeshStandardMaterial({ map:texture.concrete, color:0xf4efe6, roughness:.58, metalness:.01 }),
+  concrete2: new THREE.MeshStandardMaterial({ map:texture.concrete2, color:0xdce4e6, roughness:.61, metalness:.015 }),
+  roof: new THREE.MeshStandardMaterial({ map:texture.roof, color:0x747f86, roughness:.64, metalness:.08 }),
+  glass: new THREE.MeshPhysicalMaterial({
+    color:0x8fb7cf, roughness:.025, metalness:.02, transmission:.42,
+    transparent:true, opacity:.62, reflectivity:.92, clearcoat:.9, clearcoatRoughness:.04
+  }),
+  darkFrame: new THREE.MeshStandardMaterial({ color:0x20262a, roughness:.30, metalness:.50 }),
+  line: new THREE.LineBasicMaterial({ color:0x30343a, transparent:true, opacity:.82 }),
+  dim: new THREE.LineBasicMaterial({ color:0x1f6fe5, transparent:true, opacity:.95 }),
+  text: new THREE.MeshBasicMaterial({ color:0x20262c }),
+  blueText: new THREE.MeshBasicMaterial({ color:0x1f6fe5 }),
+  pool: new THREE.MeshPhysicalMaterial({ color:0x72b8d4, roughness:.025, transparent:true, opacity:.78, transmission:.26, reflectivity:.9, clearcoat:.8 }),
+  driveway: new THREE.MeshStandardMaterial({ map:texture.paving, color:0xffffff, roughness:.84 }),
+  contact: new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:.18, depthWrite:false }),
+  hedge: new THREE.MeshStandardMaterial({ color:0x66894f, roughness:.95 }),
+  flower: new THREE.MeshStandardMaterial({ color:0xc8a15a, roughness:.8 }),
+  brass: new THREE.MeshStandardMaterial({ color:0xb89045, roughness:.38, metalness:.34 }),
+};
+
+let clayMode = true;
+const clayMats = [mats.concrete, mats.concrete2, mats.roof];
+
+const PARCEL_DEPTH = 18.75;
+const ROAD_WIDTH = 5;
+const PARCEL_META = [
+  { id:'P1', area:'5 ari',    m2:500,  w:26.67, type:'A', bed:3, bath:2, garage:false, price:92000, footprintM2:125 },
+  { id:'P2', area:'6.25 ari', m2:625,  w:26.67, type:'B', bed:3, bath:2, garage:false, price:108000, footprintM2:135 },
+  { id:'P3', area:'7.5 ari',  m2:750,  w:40,    type:'C', bed:4, bath:2, garage:false, price:128000, footprintM2:155 },
+  { id:'P4', area:'10 ari',   m2:1000, w:53.33, type:'A', bed:4, bath:3, garage:true,  price:225000, footprintM2:125 },
+  { id:'P5', area:'10 ari',   m2:1000, w:53.33, type:'B', bed:4, bath:3, garage:true,  price:232000, footprintM2:135 },
+  { id:'P6', area:'10 ari',   m2:1000, w:53.33, type:'C', bed:5, bath:3, garage:true,  price:228000, footprintM2:155 },
+  { id:'P7', area:'7.5 ari',  m2:750,  w:40,    type:'A', bed:4, bath:2, garage:false, price:130000, footprintM2:125 },
+  { id:'P8', area:'6.25 ari', m2:625,  w:26.67, type:'C', bed:3, bath:2, garage:false, price:106000, footprintM2:155 },
+  { id:'P9', area:'5 ari',    m2:500,  w:26.67, type:'B', bed:3, bath:2, garage:false, price:94000, footprintM2:135 },
+  { id:'P10', area:'5 ari',   m2:500,  w:26.67, type:'B', bed:3, bath:2, garage:false, price:94000, footprintM2:135 },
+  { id:'P11', area:'6.25 ari',m2:625,  w:26.67, type:'A', bed:3, bath:2, garage:false, price:107000, footprintM2:125 },
+  { id:'P12', area:'7.5 ari', m2:750,  w:40,    type:'B', bed:4, bath:2, garage:false, price:129000, footprintM2:135 },
+  { id:'P13', area:'10 ari',  m2:1000, w:53.33, type:'C', bed:5, bath:3, garage:true,  price:230000, footprintM2:155 },
+  { id:'P14', area:'10 ari',  m2:1000, w:53.33, type:'A', bed:4, bath:3, garage:true,  price:226000, footprintM2:125 },
+  { id:'P15', area:'10 ari',  m2:1000, w:53.33, type:'B', bed:4, bath:3, garage:true,  price:234000, footprintM2:135 },
+  { id:'P16', area:'7.5 ari', m2:750,  w:40,    type:'C', bed:4, bath:2, garage:false, price:131000, footprintM2:155 },
+  { id:'P17', area:'6.25 ari',m2:625,  w:26.67, type:'A', bed:3, bath:2, garage:false, price:105000, footprintM2:125 },
+  { id:'P18', area:'5 ari',   m2:500,  w:26.67, type:'C', bed:3, bath:2, garage:false, price:93000, footprintM2:155 }
+];
+const TOTAL_LEN = PARCEL_META.slice(0,9).reduce((s,p)=>s+p.w,0);
+const TOTAL_WIDTH = PARCEL_DEPTH*2 + ROAD_WIDTH;
+const X_START = -TOTAL_LEN/2;
+
+const interactiveParcels = [];
+const labelSprites = [];
+const parcelNodes = new Map();
+const PARCEL_STATE_KEY = 'parcel-buyer-state-v1';
+
+// Këto janë shënimet e ngulitura brenda HTML-it.
+// Kur shkarkohet “HTML me Emra”, ky objekt mbushet automatikisht me pronarët/statuset aktuale.
+const EMBEDDED_PARCEL_STATES = {
+  "P1": {
+    "buyer": "Dr. Ardian Puzhegu",
+    "status": "sold"
+  },
+  "P2": {
+    "buyer": "",
+    "status": "free"
+  },
+  "P3": {
+    "buyer": "Dr. Ardian Puzhegu",
+    "status": "sold"
+  },
+  "P4": {
+    "buyer": "",
+    "status": "free"
+  },
+  "P5": {
+    "buyer": "",
+    "status": "free"
+  },
+  "P6": {
+    "buyer": "",
+    "status": "free"
+  },
+  "P7": {
+    "buyer": "Blerim Morina",
+    "status": "sold"
+  },
+  "P8": {
+    "buyer": "",
+    "status": "free"
+  },
+  "P9": {
+    "buyer": "Blerim Morina",
+    "status": "sold"
+  },
+  "P10": {
+    "buyer": "",
+    "status": "free"
+  },
+  "P11": {
+    "buyer": "",
+    "status": "free"
+  },
+  "P12": {
+    "buyer": "Dr. Ardian Puzhegu",
+    "status": "sold"
+  },
+  "P13": {
+    "buyer": "",
+    "status": "free"
+  },
+  "P14": {
+    "buyer": "Dr. Afrim Muhaxhiri",
+    "status": "sold"
+  },
+  "P15": {
+    "buyer": "Dr. Afrim Muhaxhiri",
+    "status": "sold"
+  },
+  "P16": {
+    "buyer": "Dr. Arber Morina",
+    "status": "sold"
+  },
+  "P17": {
+    "buyer": "Dr. Afrim Muhaxhiri",
+    "status": "sold"
+  },
+  "P18": {
+    "buyer": "Dr. Afrim Muhaxhiri",
+    "status": "sold"
+  }
+};
+const EMBEDDED_DATA_VERSION = 'embedded-dr-titles-1780395545205';
+let activeParcelId = null;
+
+function normalizeParcelStateMap(value){
+  const out = {};
+  if(!value || typeof value !== 'object') return out;
+  Object.entries(value).forEach(([id, raw])=>{
+    if(!raw || typeof raw !== 'object') return;
+    const buyer = String(raw.buyer || '').trim();
+    const status = raw.status === 'sold' || buyer ? 'sold' : 'free';
+    out[id] = { buyer, status };
+  });
+  return out;
+}
+
+function loadParcelStates(){
+  const embedded = normalizeParcelStateMap(EMBEDDED_PARCEL_STATES);
+  const embeddedHasData = Object.keys(embedded).length > 0;
+  let local = {};
+  let localVersion = null;
+  try {
+    local = normalizeParcelStateMap(JSON.parse(localStorage.getItem(PARCEL_STATE_KEY) || '{}'));
+    localVersion = localStorage.getItem(PARCEL_STATE_KEY + '-version');
+  } catch {}
+
+  // Kur file-i vjen me të dhëna të ngulitura nga CSV, mos lejo që localStorage i vjetër
+  // nga një version tjetër ta mbulojë listën e re. Herën e parë e sinkronizon browser-in
+  // me të dhënat brenda HTML-it; pastaj ndryshimet lokale ruhen normalisht.
+  if(embeddedHasData && localVersion !== EMBEDDED_DATA_VERSION){
+    try {
+      localStorage.setItem(PARCEL_STATE_KEY, JSON.stringify(embedded));
+      localStorage.setItem(PARCEL_STATE_KEY + '-version', EMBEDDED_DATA_VERSION);
+    } catch {}
+    return embedded;
+  }
+
+  return embeddedHasData ? { ...embedded, ...local } : local;
+}
+const parcelStates = loadParcelStates();
+function saveParcelStates(){
+  localStorage.setItem(PARCEL_STATE_KEY, JSON.stringify(parcelStates));
+  localStorage.setItem(PARCEL_STATE_KEY + '-version', EMBEDDED_DATA_VERSION);
+}
+function getParcelState(id){
+  const raw = parcelStates[id] || {};
+  const buyer = (raw.buyer || '').trim();
+  const status = raw.status === 'sold' || buyer ? 'sold' : 'free';
+  return { buyer, status };
+}
+function setParcelState(id, buyer, status){
+  const cleanBuyer = (buyer || '').trim();
+  const nextStatus = status === 'sold' || cleanBuyer ? 'sold' : 'free';
+  parcelStates[id] = { buyer: cleanBuyer, status: nextStatus };
+  saveParcelStates();
+}
+
+function createTextSprite(text, options={}){
+  const scale = options.scale || 1;
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ transparent:true, depthTest:false, depthWrite:false }));
+  sprite.userData = { options:{...options}, scale };
+  sprite.updateText = (nextText, overrides={}) => {
+    const opts = { ...sprite.userData.options, ...overrides };
+    sprite.userData.options = opts;
+    const color = opts.color || '#20262c';
+    const bg = opts.bg ?? 'rgba(255,255,255,.82)';
+    const border = opts.border ?? 'rgba(40,45,50,.25)';
+    const fontSize = opts.fontSize || 42;
+    const weight = opts.weight || 600;
+    const c = document.createElement('canvas');
+    const ctx = c.getContext('2d');
+    ctx.font = `${weight} ${fontSize}px JetBrains Mono, monospace`;
+    const w = Math.ceil(ctx.measureText(nextText).width + 36);
+    const h = Math.ceil(fontSize + 24);
+    c.width = w * 2;
+    c.height = h * 2;
+    ctx.scale(2,2);
+    ctx.font = `${weight} ${fontSize}px JetBrains Mono, monospace`;
+    ctx.textBaseline = 'middle';
+    roundRect(ctx, 0.5, 0.5, w-1, h-1, 8);
+    ctx.fillStyle = bg;
+    ctx.fill();
+    ctx.strokeStyle = border;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.fillText(nextText, 18, h/2+1);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    if(sprite.material.map) sprite.material.map.dispose();
+    sprite.material.map = tex;
+    sprite.material.needsUpdate = true;
+    sprite.scale.set(w*0.035*scale, h*0.035*scale, 1);
+  };
+  labelSprites.push(sprite);
+  sprite.updateText(text);
+  return sprite;
+}
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function addLineRect(group, w, d, y=0.16, colorMat=mats.line){
+  const pts = [
+    new THREE.Vector3(-w/2,y,-d/2), new THREE.Vector3(w/2,y,-d/2),
+    new THREE.Vector3(w/2,y,d/2), new THREE.Vector3(-w/2,y,d/2),
+    new THREE.Vector3(-w/2,y,-d/2)
+  ];
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  const line = new THREE.Line(geo, colorMat);
+  group.add(line);
+  return line;
+}
+
+function box(w,h,d,mat,x=0,y=0,z=0){
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
+  mesh.position.set(x,y+h/2,z);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+function addContactShadow(group,w,d,x,z,opacity=.14){
+  const shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(w,d),
+    mats.contact.clone()
+  );
+  shadow.material.opacity = opacity;
+  shadow.rotation.x = -Math.PI/2;
+  shadow.position.set(x,.018,z);
+  group.add(shadow);
+  return shadow;
+}
+function addEdges(mesh, color=0x6a737d, opacity=.22){
+  const edges = new THREE.LineSegments(
+    new THREE.EdgesGeometry(mesh.geometry),
+    new THREE.LineBasicMaterial({color,transparent:true,opacity})
+  );
+  edges.position.copy(mesh.position);
+  edges.rotation.copy(mesh.rotation);
+  edges.scale.copy(mesh.scale);
+  mesh.parent?.add(edges);
+  return edges;
+}
+function addCanopy(group,w,d,x,y,z){
+  const c=box(w,.16,d,mats.roof,x,y,z);
+  c.castShadow=true; c.receiveShadow=true; group.add(c);
+  return c;
+}
+
+function windowPlane(w,h,x,y,z,ry=0){
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w,h), mats.glass);
+  m.position.set(x,y,z);
+  m.rotation.y = ry;
+  m.castShadow = false;
+  return m;
+}
+
+function frame(w,h,x,y,z,ry=0){
+  const g = new THREE.Group();
+  g.position.set(x,y,z);
+  g.rotation.y = ry;
+  const t=.055;
+  g.add(box(w+t*2,t,.07,mats.darkFrame,0,h/2,0));
+  g.add(box(w+t*2,t,.07,mats.darkFrame,0,-h/2,0));
+  g.add(box(t,h+t*2,.07,mats.darkFrame,-w/2,0,0));
+  g.add(box(t,h+t*2,.07,mats.darkFrame,w/2,0,0));
+  return g;
+}
+
+function buildTechnicalHouse(type, w, d, garage){
+  const g = new THREE.Group();
+  const large = garage;
+  const bw = large ? 13.8 : Math.min(w*.43, 12.2);
+  const bd = large ? 10.4 : Math.min(d*.50, 9.5);
+  const gfH = 3.2;
+  const f1H = 2.9;
+
+  const matA = type === 'B' ? mats.concrete2 : mats.concrete;
+  const matB = type === 'B' ? mats.concrete : mats.concrete2;
+
+  const gf = box(bw,gfH,bd,matA,0,0,0);
+  g.add(gf);
+
+  const f1W = bw * (type === 'C' ? .72 : .78);
+  const f1D = bd * .82;
+  const offX = type === 'A' ? -bw*.10 : type === 'B' ? bw*.08 : bw*.10;
+  const offZ = type === 'C' ? -bd*.06 : 0;
+  g.add(box(f1W,f1H,f1D,matB,offX,gfH,offZ));
+
+  g.add(box(f1W+.45,.28,f1D+.45,mats.roof,offX,gfH+f1H,offZ));
+  g.add(box(bw+.35,.18,bd+.35,mats.roof,0,gfH-.18,0));
+
+  if(type === 'A'){
+    g.add(box(bw*.22,gfH*.92,.10,mats.concrete2,bw*.31,.12,bd/2+.06));
+  }
+  if(type === 'B'){
+    g.add(box(bw*.28,gfH*.88,.10,mats.roof,-bw*.28,.16,bd/2+.06));
+  }
+  if(type === 'C'){
+    g.add(box(bw*.42,.16,bd*.55,mats.roof,-bw*.24,gfH+.02,.1));
+    for(let i=0;i<5;i++){
+      g.add(box(.10,.12,bd*.62,mats.darkFrame,-bw*.43+i*bw*.10,gfH+.22,.1));
+    }
+  }
+
+  const fz = bd/2 + .012;
+  g.add(windowPlane(bw*.42,2.25,-bw*.15,1.75,fz,0));
+  g.add(frame(bw*.42,2.25,-bw*.15,1.75,fz+.018,0));
+  g.add(windowPlane(f1W*.48,1.35,offX+f1W*.10,gfH+1.55,offZ+f1D/2+.012,0));
+  g.add(frame(f1W*.48,1.35,offX+f1W*.10,gfH+1.55,offZ+f1D/2+.018,0));
+
+  g.add(windowPlane(1.15,1.25,bw/2+.012,2.05,-bd*.10,Math.PI/2));
+  g.add(frame(1.15,1.25,bw/2+.018,2.05,-bd*.10,Math.PI/2));
+
+  const door = new THREE.Mesh(new THREE.PlaneGeometry(1.05,2.25), mats.darkFrame);
+  door.position.set(bw*.34,1.125,fz+.018);
+  g.add(door);
+
+  if(garage){
+    const service = box(1.35,2.65,bd*.62,mats.concrete2,bw/2+.68,.05,-bd*.02);
+    g.add(service);
+    addCanopy(g,2.0,bd*.72,bw/2+.98,2.95,-bd*.02);
+  }
+
+  const edge = new THREE.EdgesGeometry(new THREE.BoxGeometry(bw,gfH,bd));
+  const edgeLine = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({color:0x5b626a,transparent:true,opacity:.38}));
+  edgeLine.position.y = gfH/2;
+  g.add(edgeLine);
+
+  const edge2 = new THREE.EdgesGeometry(new THREE.BoxGeometry(f1W,f1H,f1D));
+  const edgeLine2 = new THREE.LineSegments(edge2, new THREE.LineBasicMaterial({color:0x5b626a,transparent:true,opacity:.38}));
+  edgeLine2.position.set(offX,gfH+f1H/2,offZ);
+  g.add(edgeLine2);
+
+  g.userData.size = {w:bw,d:bd,h:gfH+f1H};
+  return g;
+}
+
+function buildGarage(type){
+  const g = new THREE.Group();
+  const gw=11.4, gd=10.4, gh=3.15;
+  const wall = type === 'B' ? mats.concrete2 : mats.concrete;
+  const body = box(gw,gh,gd,wall,0,0,0);
+  g.add(body);
+  g.add(box(gw+.42,.24,gd+.42,mats.roof,0,gh,0));
+
+  // Front facade: two sectional doors, architectural frames, same plane as the house entrance.
+  [-gw*.24,gw*.24].forEach(x=>{
+    const reveal = box(gw*.40,.08,2.55,mats.concrete2,x,.20,gd/2+.045);
+    reveal.rotation.x = Math.PI/2;
+    g.add(reveal);
+    const door = new THREE.Mesh(new THREE.PlaneGeometry(gw*.38,2.36), mats.darkFrame);
+    door.position.set(x,1.26,gd/2+.075);
+    g.add(door);
+    for(let i=1;i<6;i++){
+      const rib = box(gw*.38,.026,.045,mats.concrete,x,.33+i*.37,gd/2+.105);
+      g.add(rib);
+    }
+  });
+
+  // Slim horizontal clerestory window above garage doors.
+  const cler = windowPlane(gw*.70,.36,0,2.82,gd/2+.09,0);
+  g.add(cler);
+  g.add(frame(gw*.70,.36,0,2.82,gd/2+.12,0));
+
+  // Side technical window toward garden.
+  g.add(windowPlane(1.35,.85,gw/2+.012,2.0,-gd*.18,Math.PI/2));
+  g.add(frame(1.35,.85,gw/2+.02,2.0,-gd*.18,Math.PI/2));
+
+  const edges = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(gw,gh,gd)),
+    new THREE.LineBasicMaterial({color:0x5b626a,transparent:true,opacity:.32})
+  );
+  edges.position.y = gh/2;
+  g.add(edges);
+  g.userData.size={w:gw,d:gd,h:gh};
+  return g;
+}
+
+function buildPool(){
+  const g = new THREE.Group();
+  g.add(box(9,.12,13.5,mats.roof,0,0,0));
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(5.4,10.6), mats.pool);
+  water.rotation.x = -Math.PI/2;
+  water.position.y=.18;
+  g.add(water);
+  for(let i=0;i<5;i++){
+    const shimmer = new THREE.Mesh(new THREE.PlaneGeometry(4.8, .035), new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.32,depthWrite:false}));
+    shimmer.rotation.x = -Math.PI/2;
+    shimmer.rotation.z = (Math.random()-.5)*.18;
+    shimmer.position.set(0,.205,-4+i*2);
+    g.add(shimmer);
+  }
+  addLineRect(g,5.9,11.1,.22,mats.line);
+  g.userData.size={w:9,d:13.5};
+  return g;
+}
+
+function buildTreeSimple(){
+  const g = new THREE.Group();
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(.075,.10,.95,8), new THREE.MeshStandardMaterial({color:0x777067,roughness:.9}));
+  trunk.position.y=.475;
+  trunk.castShadow=true;
+  g.add(trunk);
+  const crown = new THREE.Mesh(new THREE.SphereGeometry(.50,10,8), new THREE.MeshStandardMaterial({color:0x9fb18f,roughness:.92,flatShading:true}));
+  crown.position.y=1.42;
+  crown.castShadow=true;
+  g.add(crown);
+  return g;
+}
+
+function buildCarSimple(){
+  const g = new THREE.Group();
+  const carMat = new THREE.MeshStandardMaterial({color:0x737b84,roughness:.55,metalness:.18});
+  g.add(box(1.75,.42,4.0,carMat,0,.2,0));
+  g.add(box(1.45,.55,1.85,mats.glass,0,.62,-.25));
+  const tireMat = new THREE.MeshStandardMaterial({color:0x17191c,roughness:.85});
+  [[.88,.22,1.2],[-.88,.22,1.2],[.88,.22,-1.2],[-.88,.22,-1.2]].forEach(p=>{
+    const tire = new THREE.Mesh(new THREE.CylinderGeometry(.25,.25,.18,12), tireMat);
+    tire.rotation.z=Math.PI/2;
+    tire.position.set(...p);
+    g.add(tire);
+  });
+  return g;
+}
+
+function addFence(group, w, d, gap=3.8){
+  const railMat = new THREE.MeshStandardMaterial({color:0x8f969d, roughness:.82, metalness:.12});
+  const postMat = new THREE.MeshStandardMaterial({color:0x757d86, roughness:.78, metalness:.16});
+  const frontZ = d/2;
+  const segments = [
+    { w: w, h:.10, d:.10, x:0, y:.50, z:-d/2 },
+    { w: w, h:.10, d:.10, x:0, y:.22, z:-d/2 },
+    { w: w, h:.10, d:.10, x:0, y:.50, z:d/2 },
+    { w: w, h:.10, d:.10, x:0, y:.22, z:d/2 },
+    { w:.10, h:.62, d:d, x:-w/2, y:.01, z:0 },
+    { w:.10, h:.62, d:d, x:w/2, y:.01, z:0 }
+  ];
+  segments.forEach(s=>group.add(box(s.w,s.h,s.d,railMat,s.x,s.y,s.z)));
+  for(let x=-w/2; x<=w/2; x+=2.6){
+    group.add(box(.12,.62,.12,postMat,x,.01,-d/2));
+    if(Math.abs(x) > gap/2 + .25){
+      group.add(box(.12,.62,.12,postMat,x,.01,d/2));
+    }
+  }
+  const gateLeft = box((w-gap)/2,.08,.08,railMat,-(gap/2)/2 - (w-gap)/4,.24,frontZ);
+  const gateRight = box((w-gap)/2,.08,.08,railMat,(gap/2)/2 + (w-gap)/4,.24,frontZ);
+  group.add(gateLeft, gateRight);
+}
+
+function buildStreetLight(){
+  const g = new THREE.Group();
+  const poleMat = new THREE.MeshStandardMaterial({color:0x6b727a,roughness:.68,metalness:.24});
+  const lampMat = new THREE.MeshPhysicalMaterial({color:0xfff1cf, emissive:0xffe7ab, emissiveIntensity:.35, roughness:.22});
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(.10,.13,5.8,12), poleMat);
+  pole.position.y=2.9; pole.castShadow=true; g.add(pole);
+  const arm = new THREE.Mesh(new THREE.BoxGeometry(1.2,.08,.08), poleMat);
+  arm.position.set(.55,5.55,0); g.add(arm);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(.35,.18,.28), lampMat);
+  head.position.set(1.07,5.46,0); g.add(head);
+  return g;
+}
+
+function makeRadialSprite({size=128, inner='rgba(255,231,170,.75)', outer='rgba(255,231,170,0)', scale=30}={}){
+  const c=document.createElement('canvas'); c.width=c.height=size;
+  const ctx=c.getContext('2d');
+  const grd=ctx.createRadialGradient(size/2,size/2,0,size/2,size/2,size/2);
+  grd.addColorStop(0,inner); grd.addColorStop(1,outer);
+  ctx.fillStyle=grd; ctx.fillRect(0,0,size,size);
+  const tex=new THREE.CanvasTexture(c); tex.colorSpace=THREE.SRGBColorSpace;
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false,depthTest:false}));
+  sprite.scale.set(scale,scale,1);
+  return sprite;
+}
+
+function buildHedge(length=5, depth=.55){
+  const g = new THREE.Group();
+  const pieces = Math.max(1, Math.floor(length/1.2));
+  for(let i=0;i<pieces;i++){
+    const b = new THREE.Mesh(new THREE.BoxGeometry(length/pieces*.92,.62,depth), mats.hedge);
+    b.position.set(-length/2+(i+.5)*length/pieces,.31,(Math.random()-.5)*.06);
+    b.castShadow=true; b.receiveShadow=true;
+    g.add(b);
+  }
+  return g;
+}
+
+function buildBench(){
+  const g=new THREE.Group();
+  const wood=new THREE.MeshStandardMaterial({color:0x9b7550,roughness:.65});
+  const metal=new THREE.MeshStandardMaterial({color:0x30363d,roughness:.45,metalness:.3});
+  g.add(box(2.2,.10,.38,wood,0,.55,0));
+  g.add(box(2.2,.10,.18,wood,0,.92,-.22));
+  [-.82,.82].forEach(x=>{
+    g.add(box(.08,.55,.08,metal,x,.03,.12));
+    g.add(box(.08,.55,.08,metal,x,.03,-.25));
+  });
+  return g;
+}
+
+function addLandscapeFrame(){
+  const sunSprite = makeRadialSprite({scale:90});
+  sunSprite.position.set(265,168,-250);
+  scene.add(sunSprite);
+
+  const hillMat = new THREE.MeshStandardMaterial({color:0xb8c8aa,roughness:.97,flatShading:true});
+  for(let i=0;i<18;i++){
+    const hill = new THREE.Mesh(
+      new THREE.ConeGeometry(18+Math.random()*42, 4+Math.random()*10, 5),
+      hillMat.clone()
+    );
+    hill.material.color.offsetHSL(0, 0, (Math.random()-.5)*.06);
+    const side = i%2===0 ? -1 : 1;
+    hill.scale.z = .18 + Math.random()*.22;
+    hill.rotation.y = Math.random()*Math.PI;
+    hill.position.set(
+      -TOTAL_LEN/2 - 70 + Math.random()*(TOTAL_LEN+140),
+      -1.8,
+      side*(TOTAL_WIDTH/2 + 48 + Math.random()*70)
+    );
+    scene.add(hill);
+  }
+
+  const backTreeMat = new THREE.MeshStandardMaterial({color:0x789268,roughness:.94,flatShading:true});
+  const trunkMat = new THREE.MeshStandardMaterial({color:0x756b5d,roughness:.88});
+  for(let i=0;i<116;i++){
+    const side = i%2===0 ? -1 : 1;
+    const x = -TOTAL_LEN/2 - 34 + Math.random()*(TOTAL_LEN+68);
+    const z = side*(TOTAL_WIDTH/2 + 10 + Math.random()*34);
+    const g = new THREE.Group();
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(.12,.18,1.2+Math.random()*.45,8), trunkMat);
+    trunk.position.y=.68; trunk.castShadow=true; g.add(trunk);
+    const crownMat = backTreeMat.clone();
+    crownMat.color.offsetHSL(0,0,(Math.random()-.5)*.12);
+    const crown = new THREE.Mesh(new THREE.ConeGeometry(1.05+Math.random()*.75,2.6+Math.random()*1.55,9), crownMat);
+    crown.position.y=2.25+Math.random()*.25; crown.castShadow=true; g.add(crown);
+    g.position.set(x,0,z);
+    g.rotation.y=Math.random()*Math.PI;
+    siteGroup.add(g);
+  }
+
+  for(let x=-TOTAL_LEN/2+22; x<TOTAL_LEN/2; x+=44){
+    const b1=buildBench(); b1.position.set(x,0,ROAD_WIDTH/2+2.5); b1.rotation.y=Math.PI/2; siteGroup.add(b1);
+    const b2=buildBench(); b2.position.set(x+12,0,-ROAD_WIDTH/2-2.5); b2.rotation.y=-Math.PI/2; siteGroup.add(b2);
+  }
+}
+
+const siteGroup = new THREE.Group();
+scene.add(siteGroup);
+
+const basePlate = box(TOTAL_LEN+34,.16,TOTAL_WIDTH+24,mats.base,0,-.08,0);
+basePlate.receiveShadow = true;
+siteGroup.add(basePlate);
+
+// Large receiving terrain for architectural context and cleaner contact shadows.
+const studioFloor = new THREE.Mesh(
+  new THREE.PlaneGeometry(1200,720),
+  new THREE.MeshStandardMaterial({color:0xc8d6c2,roughness:.97})
+);
+studioFloor.rotation.x = -Math.PI/2;
+studioFloor.position.y = -.018;
+studioFloor.receiveShadow = true;
+scene.add(studioFloor);
+
+const softSiteShadow = new THREE.Mesh(
+  new THREE.PlaneGeometry(TOTAL_LEN+70,TOTAL_WIDTH+56),
+  new THREE.ShadowMaterial({color:0x000000,opacity:.13})
+);
+softSiteShadow.rotation.x = -Math.PI/2;
+softSiteShadow.position.y = -.006;
+softSiteShadow.receiveShadow = true;
+scene.add(softSiteShadow);
+
+const LAND_PRICE_PER_ARI = 5000;
+
+function formatEuro(value){
+  return `€${Math.round(value).toLocaleString('en-US')}`;
+}
+
+function renderAvailabilityPanel(){
+  const list = document.getElementById('availability-list');
+  if(!list) return;
+  let sold = 0;
+  const rows = PARCEL_META.map(meta=>{
+    const state = getParcelState(meta.id);
+    const isSold = state.status === 'sold';
+    if(isSold) sold += 1;
+    const owner = isSold ? (state.buyer || 'E Shitur') : 'E Lirë';
+    const statusLabel = isSold ? 'E shitur' : 'Në dispozicion';
+    const ari = meta.m2 / 100;
+    const landPrice = ari * LAND_PRICE_PER_ARI;
+    const surface = `${meta.m2.toLocaleString('en-US')} m² · ${ari} ari`;
+    const priceLine = `${formatEuro(landPrice)} · €${LAND_PRICE_PER_ARI.toLocaleString('en-US')}/ari`;
+    // Sipërfaqja shihet gjithmonë; çmimi i parcelave të shitura fshihet derisa të klikohet.
+    const priceCell = isSold
+      ? `<td class="price-cell locked"><span class="surface">${surface}</span><span class="price-mask">€ ••••• · kliko për çmimin</span><span class="price-real">${priceLine}</span></td>`
+      : `<td class="price-cell"><span class="surface">${surface}</span><span class="price-real">${priceLine}</span></td>`;
+    return `<tr class="${isSold ? 'sold' : 'free'}">
+      <td>${meta.id}</td>
+      <td>${owner}</td>
+      ${priceCell}
+      <td><span class="availability-status ${isSold ? 'sold' : 'free'}">${statusLabel}</span></td>
+    </tr>`;
+  }).join('');
+  list.innerHTML = rows;
+  // Klik = shfaq/fsheh çmimin; largimi i miut e fsheh sërish.
+  list.querySelectorAll('td.price-cell.locked').forEach(cell=>{
+    cell.addEventListener('click', ()=> cell.classList.toggle('revealed'));
+    cell.addEventListener('mouseleave', ()=> cell.classList.remove('revealed'));
+  });
+  const free = PARCEL_META.length - sold;
+  document.getElementById('availability-free').textContent = free;
+  document.getElementById('availability-sold').textContent = sold;
+}
+
+function updateGlobalMetrics(){
+  let sold = 0;
+  PARCEL_META.forEach(meta=>{ if(getParcelState(meta.id).status === 'sold') sold += 1; });
+  const free = PARCEL_META.length - sold;
+  document.getElementById('metric-free').textContent = free;
+  document.getElementById('metric-sold').textContent = sold;
+  document.getElementById('stat-free').textContent = free;
+  document.getElementById('stat-sold').textContent = sold;
+  renderAvailabilityPanel();
+}
+
+function applyParcelVisualState(meta){
+  const node = parcelNodes.get(meta.id);
+  if(!node) return;
+  const state = getParcelState(meta.id);
+  const free = state.status === 'free';
+  node.statusSprite.updateText(free ? 'E LIRË' : (state.buyer || 'E SHITUR'), {
+    color: free ? '#2f8a48' : '#c62828',
+    bg: free ? 'rgba(243,251,240,.95)' : 'rgba(255,239,239,.95)',
+    border: free ? 'rgba(98,157,86,.35)' : 'rgba(214,40,40,.35)',
+    fontSize: free ? 26 : 52
+  });
+  node.statusPlate.material.color.setHex(free ? 0x35d65f : 0xff2d2d);
+  node.statusPlate.material.opacity = free ? .12 : .14;
+  if(node.glow){
+    node.glow.material.color.setHex(free ? 0x35d65f : 0xff2d2d);
+    node.glow.material.opacity = free ? .50 : .58;
+  }
+  node.lot.material = mats.parcel.clone();
+  node.lot.material.color.setHex(free ? 0xffffff : 0xfbeeee);
+  if(IS_HERO_RENDER){
+    node.statusSprite.visible = false;
+    node.statusPlate.visible = false;
+    if(node.glow) node.glow.visible = false;
+    node.lot.material.color.setHex(0xffffff);
+  }
+}
+
+function makeGlowTexture(){
+  const c=document.createElement('canvas'); c.width=c.height=128;
+  const ctx=c.getContext('2d');
+  const g=ctx.createRadialGradient(64,64,4,64,64,64);
+  g.addColorStop(0,'rgba(255,255,255,1)');
+  g.addColorStop(.45,'rgba(255,255,255,.72)');
+  g.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,128,128);
+  const t=new THREE.CanvasTexture(c);
+  t.colorSpace=THREE.SRGBColorSpace;
+  return t;
+}
+const glowTex = makeGlowTexture();
+
+function buildRow(slice,isNorth){
+  let cursor=0;
+  slice.forEach(meta=>{
+    const w=meta.w,d=PARCEL_DEPTH;
+    const x=X_START+cursor+w/2;
+    const z=isNorth ? ROAD_WIDTH/2+d/2 : -ROAD_WIDTH/2-d/2;
+
+    const pg = new THREE.Group();
+    pg.position.set(x,0,z);
+
+    const lot = box(w-.22,.08,d-.22,mats.parcel.clone(),0,0,0);
+    lot.userData = meta;
+    pg.add(lot);
+    addLineRect(pg,w,d,.15,mats.line);
+    addFence(pg,w-.18,d-.18, meta.garage ? 6.6 : 4.2);
+    const roadHedge = buildHedge(Math.min(w*.42, 15), .48);
+    roadHedge.position.set(w*.20,0,isNorth ? -d/2+.55 : d/2-.55);
+    pg.add(roadHedge);
+
+    const idLabel = createTextSprite(meta.id,{scale:.60,fontSize:34,bg:'rgba(255,255,255,.94)'});
+    idLabel.position.set(0,.34,0.9);
+    pg.add(idLabel);
+    const state = getParcelState(meta.id);
+    const statusSprite = createTextSprite(state.status === 'free' ? 'E LIRË' : (state.buyer || 'E SHITUR'),{scale:.50,fontSize: state.status === 'free' ? 26 : 52});
+    statusSprite.position.set(0,.34,-1.05);
+    pg.add(statusSprite);
+    const statusPlate = new THREE.Mesh(
+      new THREE.BoxGeometry(w-.44,.045,d-.44),
+      new THREE.MeshBasicMaterial({color:0x7bb06a,transparent:true,opacity:.08,depthWrite:false})
+    );
+    statusPlate.position.y=.11;
+    pg.add(statusPlate);
+
+    // Shkëlqim ngjyrë statusi mbi parcelë: e kuqe = e shitur, e gjelbër = në dispozicion.
+    const glow = new THREE.Mesh(
+      new THREE.PlaneGeometry(w-.25, d-.25),
+      new THREE.MeshBasicMaterial({map:glowTex,transparent:true,depthWrite:false,opacity:.5})
+    );
+    glow.rotation.x = -Math.PI/2;
+    glow.position.y = .16;
+    pg.add(glow);
+
+    const house = buildTechnicalHouse(meta.type,w,d,meta.garage);
+    const hs = house.userData.size;
+    const hZ = isNorth ? -d/2 + hs.d/2 + 2.55 : d/2 - hs.d/2 - 2.55;
+    const hX = meta.garage ? -w*.22 : -w*.04;
+    house.position.set(hX,0,hZ);
+    if(isNorth) house.rotation.y=Math.PI;
+    pg.add(house);
+    addContactShadow(pg, hs.w+1.4, hs.d+1.2, hX, hZ, .12);
+
+    let garageInfo = null;
+    if(meta.garage){
+      const garage = buildGarage(meta.type);
+      const gs = garage.userData.size;
+
+      // Garazhi lidhet nga dimensionet e shtëpisë: i ngjitur në anën e djathtë dhe fronti i barazuar me shtëpinë.
+      const gap = 0.05;
+      const gx = hX + hs.w / 2 + gs.w / 2 + gap;
+      const houseFrontZ = isNorth ? hZ - hs.d / 2 : hZ + hs.d / 2;
+      const gz = isNorth ? houseFrontZ + gs.d / 2 : houseFrontZ - gs.d / 2;
+
+      garage.position.set(gx,0,gz);
+      if(isNorth) garage.rotation.y=Math.PI;
+      pg.add(garage);
+      garageInfo={gx,gz,gs};
+      addContactShadow(pg, gs.w+1.2, gs.d+1.0, gx, gz, .12);
+
+      // Volum lidhës fizik mes shtëpisë dhe garazhit, që të lexohet si një objekt i vetëm.
+      const connectorW = 1.35;
+      const connectorD = Math.min(hs.d, gs.d) * .62;
+      const connectorX = hX + hs.w / 2 + connectorW / 2;
+      const connectorZ = gz;
+      const connector = box(connectorW,3.05,connectorD,mats.concrete2,connectorX,.02,connectorZ);
+      pg.add(connector);
+      pg.add(box(connectorW+.22,.18,connectorD+.34,mats.roof,connectorX,3.05,connectorZ));
+
+      const pool = buildPool();
+      const ps = pool.userData.size;
+      pool.position.set(-w*.18,0,isNorth ? d/2-ps.d/2-1.05 : -d/2+ps.d/2+1.05);
+      pg.add(pool);
+
+      const car1 = buildCarSimple();
+      car1.position.set(gx-gs.w*.24,0,gz+(isNorth?-gs.d/2-2.25:gs.d/2+2.25));
+      if(isNorth) car1.rotation.y=Math.PI;
+      pg.add(car1);
+    }
+
+    const roadSideZ = isNorth ? -d/2 : d/2;
+    const pathEndZ = hZ + (isNorth ? -hs.d/2 : hs.d/2);
+    const pathLen = Math.abs(roadSideZ-pathEndZ);
+    const path = box(1.45,.07,pathLen,mats.roof,hX,.05,(roadSideZ+pathEndZ)/2);
+    pg.add(path);
+
+    if(garageInfo){
+      const garageFrontZ = isNorth ? garageInfo.gz - garageInfo.gs.d/2 : garageInfo.gz + garageInfo.gs.d/2;
+      const drivewayLen = Math.abs(roadSideZ - garageFrontZ);
+      const drivewayZ = (roadSideZ + garageFrontZ) / 2;
+      const drive = box(garageInfo.gs.w*.86,.07,drivewayLen,mats.driveway,garageInfo.gx,.045,drivewayZ);
+      pg.add(drive);
+    }
+
+    const treeCount = meta.garage ? 4 : 2;
+    for(let i=0;i<treeCount;i++){
+      const t = buildTreeSimple();
+      const tx = -w/2+2 + Math.random()*(w-4);
+      const tz = -d/2+2 + Math.random()*(d-4);
+      if(Math.abs(tx-hX)<hs.w/2+2 && Math.abs(tz-hZ)<hs.d/2+2) continue;
+      if(garageInfo && Math.abs(tx-garageInfo.gx)<garageInfo.gs.w/2+2 && Math.abs(tz-garageInfo.gz)<garageInfo.gs.d/2+3) continue;
+      t.position.set(tx,0,tz);
+      pg.add(t);
+    }
+
+    const hit = box(w,.22,d,new THREE.MeshBasicMaterial({visible:false}),0,0,0);
+    hit.userData = meta;
+    pg.add(hit);
+    interactiveParcels.push(hit);
+
+    const highlight = new THREE.Mesh(
+      new THREE.BoxGeometry(w,.05,d),
+      new THREE.MeshBasicMaterial({color:0x2d6cdf,transparent:true,opacity:0,depthWrite:false})
+    );
+    highlight.position.y=.14;
+    pg.add(highlight);
+    pg.userData.highlight=highlight;
+    pg.userData.meta=meta;
+    parcelNodes.set(meta.id, { group: pg, lot, statusSprite, idLabel, statusPlate, glow });
+
+    siteGroup.add(pg);
+    applyParcelVisualState(meta);
+    cursor += w;
+  });
+}
+
+buildRow(PARCEL_META.slice(0,9), false);
+buildRow(PARCEL_META.slice(9,18), true);
+
+const road = box(TOTAL_LEN,.07,ROAD_WIDTH,mats.road,0,.02,0);
+road.receiveShadow = true;
+siteGroup.add(road);
+const sidewalkMat = new THREE.MeshStandardMaterial({color:0xd4d9de,roughness:.88});
+const curbMat = new THREE.MeshStandardMaterial({color:0xb7bdc4,roughness:.84});
+siteGroup.add(box(TOTAL_LEN,.08,1.55,sidewalkMat,0,.03, ROAD_WIDTH/2 + .78));
+siteGroup.add(box(TOTAL_LEN,.08,1.55,sidewalkMat,0,.03,-ROAD_WIDTH/2 - .78));
+siteGroup.add(box(TOTAL_LEN,.18,.18,curbMat,0,.08, ROAD_WIDTH/2 + .09));
+siteGroup.add(box(TOTAL_LEN,.18,.18,curbMat,0,.08,-ROAD_WIDTH/2 - .09));
+for(let x=-TOTAL_LEN/2+2; x<TOTAL_LEN/2; x+=7){
+  siteGroup.add(box(3.5,.025,.12,mats.roadLine,x,.095,0));
+}
+for(let x=-TOTAL_LEN/2+14; x<TOTAL_LEN/2; x+=28){
+  const lampA = buildStreetLight();
+  lampA.position.set(x,0,ROAD_WIDTH/2 + 1.55);
+  siteGroup.add(lampA);
+  const lampB = buildStreetLight();
+  lampB.rotation.y = Math.PI;
+  lampB.position.set(x,0,-ROAD_WIDTH/2 - 1.55);
+  siteGroup.add(lampB);
+}
+[-TOTAL_LEN/2-2.5,TOTAL_LEN/2+2.5].forEach(x=>{
+  siteGroup.add(box(5,.07,TOTAL_WIDTH+8,mats.road,x,.02,0));
+});
+updateGlobalMetrics();
+addLandscapeFrame();
+
+function addDimensionLine(start,end,text,offsetY=.35){
+  const group = new THREE.Group();
+  const pts = [new THREE.Vector3(start.x,offsetY,start.z), new THREE.Vector3(end.x,offsetY,end.z)];
+  group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mats.dim));
+
+  const dir = new THREE.Vector3(end.x-start.x,0,end.z-start.z).normalize();
+  const perp = new THREE.Vector3(-dir.z,0,dir.x);
+  [start,end].forEach(p=>{
+    const a = new THREE.Vector3(p.x,offsetY,p.z).add(perp.clone().multiplyScalar(.75));
+    const b = new THREE.Vector3(p.x,offsetY,p.z).add(perp.clone().multiplyScalar(-.75));
+    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([a,b]), mats.dim));
+  });
+
+  const mid = new THREE.Vector3((start.x+end.x)/2,offsetY+1.0,(start.z+end.z)/2);
+  const label = createTextSprite(text,{scale:.72,fontSize:34,color:'#1f6fe5',bg:'rgba(255,255,255,.86)',border:'rgba(31,111,229,.35)'});
+  label.position.copy(mid);
+  group.add(label);
+  scene.add(group);
+}
+if(!IS_HERO_RENDER){
+  addDimensionLine({x:-TOTAL_LEN/2,z:-TOTAL_WIDTH/2-7},{x:TOTAL_LEN/2,z:-TOTAL_WIDTH/2-7},'360 m',.32);
+  addDimensionLine({x:TOTAL_LEN/2+11,z:-TOTAL_WIDTH/2},{x:TOTAL_LEN/2+11,z:TOTAL_WIDTH/2},'42.5 m',.32);
+  addDimensionLine({x:-TOTAL_LEN/2-10,z:-ROAD_WIDTH/2},{x:-TOTAL_LEN/2-10,z:ROAD_WIDTH/2},'5.00 m',.32);
+}
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const info = document.getElementById('info');
+let selectedGroup = null;
+
+function setMouse(e){
+  mouse.x=(e.clientX/window.innerWidth)*2-1;
+  mouse.y=-(e.clientY/window.innerHeight)*2+1;
+}
+function rayHit(){
+  raycaster.setFromCamera(mouse,camera);
+  return raycaster.intersectObjects(interactiveParcels,false);
+}
+window.addEventListener('pointermove',e=>{
+  setMouse(e);
+  const hits = rayHit();
+  if(hits.length){
+    const d = hits[0].object.userData;
+    const state = getParcelState(d.id);
+    document.getElementById('info-id').textContent=d.id;
+    document.getElementById('info-area').textContent=d.area;
+    document.getElementById('info-type').textContent=d.type;
+    document.getElementById('info-status').textContent=state.status === 'free' ? 'E LIRË' : 'E SHITUR';
+    document.getElementById('info-buyer').textContent=state.status === 'free' ? '—' : (state.buyer || 'Blerës');
+    info.classList.add('visible');
+    renderer.domElement.classList.add('pointer');
+  }else{
+    info.classList.remove('visible');
+    renderer.domElement.classList.remove('pointer');
+  }
+});
+
+let down={x:0,y:0,t:0};
+renderer.domElement.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,t:performance.now()}});
+renderer.domElement.addEventListener('pointerup',e=>{
+  if(Math.hypot(e.clientX-down.x,e.clientY-down.y)>5 || performance.now()-down.t>450) return;
+  setMouse(e);
+  const hits=rayHit();
+  if(hits.length) openDetails(hits[0].object.userData,hits[0].object.parent);
+});
+
+function openDetails(meta,node){
+  let group=node;
+  while(group && !group.userData.highlight) group=group.parent;
+  if(selectedGroup) selectedGroup.userData.highlight.material.opacity=0;
+  selectedGroup=group;
+  if(group) group.userData.highlight.material.opacity=.18;
+
+  activeParcelId = meta.id;
+  const state = getParcelState(meta.id);
+  const footprint = meta.footprintM2 || (meta.garage ? 125 : 125);
+  const firstFloor = footprint;
+  const totalHouse = footprint + firstFloor;
+
+  document.getElementById('m-id').textContent=meta.id;
+  document.getElementById('m-sub').textContent=`VILA · TIP ${meta.type}`;
+  const landPrice = (meta.m2 / 100) * LAND_PRICE_PER_ARI;
+  document.getElementById('m-price').textContent=formatEuro(landPrice);
+  document.getElementById('m-price-sub').textContent=`Çmimi truallit · ${meta.area} × €${LAND_PRICE_PER_ARI.toLocaleString('en-US')} / ari`;
+  document.getElementById('m-area').textContent=`${meta.m2} m² (${meta.area})`;
+  document.getElementById('m-status').textContent=state.status === 'free' ? 'E Lirë' : 'E Shitur';
+  document.getElementById('m-buyer').textContent=state.status === 'free' ? '—' : (state.buyer || 'Blerës');
+  document.getElementById('m-house').textContent=`${totalHouse} m²`;
+  document.getElementById('m-ground').textContent=`${footprint} m²`;
+  document.getElementById('m-first').textContent=`${firstFloor} m²`;
+  document.getElementById('m-bed').textContent=meta.bed;
+  document.getElementById('m-bath').textContent=meta.bath;
+  document.getElementById('m-garage').textContent=meta.garage?'2 vetura · garazh teknik':'Parking i jashtëm';
+  document.getElementById('m-pool').textContent=meta.garage?'Po · skemë teknike':'Jo';
+  document.getElementById('m-style').textContent=`Volumetri ${meta.type}`;
+  document.getElementById('buyer-input').value = state.buyer || '';
+  document.getElementById('status-select').value = state.status;
+  syncBuyerChip(state.status, state.buyer);
+  drawFloor(meta);
+  document.getElementById('modal').classList.add('visible');
+  document.getElementById('modal-backdrop').classList.add('visible');
+}
+function syncBuyerChip(status, buyer=''){
+  const chip = document.getElementById('buyer-chip');
+  const sold = status === 'sold' || (buyer || '').trim();
+  chip.className = `chip ${sold ? 'sold' : 'free'}`;
+  chip.textContent = sold ? ((buyer || 'E Shitur').trim()) : 'E Lirë';
+}
+
+document.getElementById('status-select').addEventListener('change', e=>{
+  syncBuyerChip(e.target.value, document.getElementById('buyer-input').value);
+});
+document.getElementById('buyer-input').addEventListener('input', e=>{
+  const nextStatus = e.target.value.trim() ? 'sold' : document.getElementById('status-select').value;
+  if(e.target.value.trim()) document.getElementById('status-select').value = 'sold';
+  syncBuyerChip(nextStatus, e.target.value);
+});
+document.getElementById('save-buyer-btn').onclick = ()=>{
+  if(!activeParcelId) return;
+  const buyer = document.getElementById('buyer-input').value.trim();
+  const status = buyer ? 'sold' : document.getElementById('status-select').value;
+  setParcelState(activeParcelId, buyer, status);
+  const meta = PARCEL_META.find(p=>p.id === activeParcelId);
+  applyParcelVisualState(meta);
+  updateGlobalMetrics();
+  openDetails(meta, parcelNodes.get(activeParcelId).group);
+};
+document.getElementById('clear-buyer-btn').onclick = ()=>{
+  if(!activeParcelId) return;
+  document.getElementById('buyer-input').value = '';
+  document.getElementById('status-select').value = 'free';
+  setParcelState(activeParcelId, '', 'free');
+  const meta = PARCEL_META.find(p=>p.id === activeParcelId);
+  applyParcelVisualState(meta);
+  updateGlobalMetrics();
+  openDetails(meta, parcelNodes.get(activeParcelId).group);
+};
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('visible');
+  document.getElementById('modal-backdrop').classList.remove('visible');
+  if(selectedGroup) selectedGroup.userData.highlight.material.opacity=0;
+  selectedGroup=null;
+}
+document.getElementById('close-modal').onclick=closeModal;
+document.getElementById('modal-backdrop').onclick=closeModal;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+function drawFloor(meta){
+  const w=meta.garage?160:126,h=100;
+  const rooms=[
+    [0,0,w*.55,h*.55,'LIVING'],
+    [w*.55,0,w*.45,h*.34,'KUZHINË'],
+    [w*.55,h*.34,w*.45,h*.21,'NGRËNIE'],
+    [0,h*.55,w*.32,h*.45,'DHOMË'],
+    [w*.32,h*.55,w*.23,h*.45,'BANJË'],
+    [w*.55,h*.55,w*.45,h*.45,'DHOMË']
+  ];
+  let svg=`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1" y="1" width="${w-2}" height="${h-2}" fill="#f4f1eb" stroke="#2f3740" stroke-width="1.5"/>`;
+  rooms.forEach(r=>{
+    svg+=`<rect x="${r[0]}" y="${r[1]}" width="${r[2]}" height="${r[3]}" fill="none" stroke="#6b737c" stroke-width=".75"/>
+    <text x="${r[0]+r[2]/2}" y="${r[1]+r[3]/2}" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono" font-size="4.2" fill="#2f3740">${r[4]}</text>`;
+  });
+  svg+=`<text x="${w-8}" y="10" text-anchor="middle" font-family="JetBrains Mono" font-size="5" fill="#1f6fe5">V</text>
+  <path d="M ${w-8} 14 L ${w-10} 20 L ${w-8} 18 L ${w-6} 20 Z" fill="#1f6fe5"/>
+  </svg>`;
+  document.getElementById('floor-plan').innerHTML=svg;
+}
+
+const viewPresets = {
+  technical:{ type:'ortho', pos:[185,190,185], target:[0,0,0], zoom:2.15 },
+  top:{ type:'ortho', pos:[0,420,.1], target:[0,0,0], zoom:2.55 },
+  iso:{ type:'ortho', pos:[230,230,230], target:[0,0,0], zoom:1.85 },
+  perspective:{ type:'persp', pos:[132,64,128], target:[0,2.2,0] },
+  street:{ type:'persp', pos:[-TOTAL_LEN/2+22,6.4,-5.5], target:[0,3.2,0] }
+};
+function useCamera(type){
+  const old = camera;
+  camera = type === 'ortho' ? orthoCam : perspCam;
+  camera.aspect = window.innerWidth/window.innerHeight;
+  if(camera.isOrthographicCamera){
+    const a=window.innerWidth/window.innerHeight;
+    camera.left=-orthoSize*a; camera.right=orthoSize*a; camera.top=orthoSize; camera.bottom=-orthoSize;
+  }
+  camera.updateProjectionMatrix();
+  controls.object = camera;
+  camera.position.copy(old.position);
+  controls.target.copy(controls.target);
+}
+function animateView(v){
+  useCamera(v.type);
+  const startPos = camera.position.clone();
+  const startTarget = controls.target.clone();
+  const endPos = new THREE.Vector3(...v.pos);
+  const endTarget = new THREE.Vector3(...v.target);
+  const startZoom = camera.isOrthographicCamera ? camera.zoom : 1;
+  const endZoom = v.zoom || startZoom;
+  const start=performance.now(), dur=850;
+  function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+  function tick(now){
+    const p=Math.min(1,(now-start)/dur), e=ease(p);
+    camera.position.lerpVectors(startPos,endPos,e);
+    controls.target.lerpVectors(startTarget,endTarget,e);
+    if(camera.isOrthographicCamera){
+      camera.zoom = startZoom + (endZoom-startZoom)*e;
+      camera.updateProjectionMatrix();
+    }
+    controls.update();
+    if(p<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+document.querySelectorAll('button[data-view]').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('button[data-view]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    animateView(viewPresets[btn.dataset.view]);
+  };
+});
+document.getElementById('hide-ui-btn').onclick=()=>{ renderAvailabilityPanel(); document.body.classList.add('ui-hidden'); };
+const printBtn = document.getElementById('print-table-btn');
+if(printBtn) printBtn.onclick = ()=>{ renderAvailabilityPanel(); window.print(); };
+// Printimi përdor gjithmonë paraqitjen kompakte (jo "Hide UI"), pastaj rikthehet gjendja.
+let _wasHiddenForPrint=false;
+window.addEventListener('beforeprint', ()=>{
+  _wasHiddenForPrint = document.body.classList.contains('ui-hidden');
+  document.body.classList.remove('ui-hidden');
+  renderAvailabilityPanel();
+});
+window.addEventListener('afterprint', ()=>{
+  if(_wasHiddenForPrint) document.body.classList.add('ui-hidden');
+});
+document.getElementById('show-ui-btn').onclick=()=>document.body.classList.remove('ui-hidden');
+
+document.getElementById('clay-btn').onclick=e=>{
+  clayMode=!clayMode;
+  e.currentTarget.classList.toggle('active',clayMode);
+  mats.parcel.color.setHex(clayMode?0xc8d4be:0xbcd7ad);
+  mats.concrete.color.setHex(clayMode?0xdfe2e5:0xe9e2d8);
+  mats.concrete2.color.setHex(clayMode?0xc5cbd1:0xbac1c8);
+  mats.roof.color.setHex(clayMode?0x949ca5:0x7a838c);
+};
+
+
+function showToast(message){
+  const toast=document.getElementById('toast');
+  toast.textContent=message;
+  toast.classList.add('visible');
+  clearTimeout(showToast._t);
+  showToast._t=setTimeout(()=>toast.classList.remove('visible'),1800);
+}
+
+function renderFrame(){
+  renderPass.camera = camera;
+  if(cinematicMode){
+    composer.render();
+  }else{
+    renderer.render(scene,camera);
+  }
+}
+
+document.getElementById('cinematic-btn').onclick=e=>{
+  cinematicMode=!cinematicMode;
+  document.body.classList.toggle('cinematic-off', !cinematicMode);
+  e.currentTarget.classList.toggle('active', cinematicMode);
+  bloomPass.strength = cinematicMode ? .10 : 0;
+  renderer.toneMappingExposure = cinematicMode ? 1.08 : 1.0;
+  document.getElementById('render-badge').textContent = cinematicMode ? 'Realistic render · golden light · soft shadows' : 'Clean technical render · no vignette';
+};
+
+function exportPNG(){
+  renderFrame();
+  const a=document.createElement('a');
+  const stamp=new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+  a.download=`parcelimi-premium-${stamp}.png`;
+  a.href=renderer.domElement.toDataURL('image/png');
+  a.click();
+  showToast('PNG u eksportua');
+}
+
+document.getElementById('export-png-btn').onclick=exportPNG;
+document.getElementById('modal-export-btn').onclick=exportPNG;
+
+function exportCSV(){
+  const header=['Parcela','Siperfaqja parcele m2','Area','Tipi','Statusi','Bleresi','Cmimi EUR'];
+  const rows=PARCEL_META.map(meta=>{
+    const st=getParcelState(meta.id);
+    const landPrice = (meta.m2 / 100) * LAND_PRICE_PER_ARI;
+    return [meta.id,meta.m2,meta.area,meta.type,st.status==='free'?'E Lire':'E Shitur',st.buyer || '',Math.round(landPrice)];
+  });
+  const csv=[header,...rows].map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='parcelat-status-bleresit.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV u eksportua');
+}
+document.getElementById('export-csv-btn').onclick=exportCSV;
+
+
+function exportHTMLWithEmbeddedData(){
+  // Sinkronizo shënimet aktuale nga memoria në objekt të pastër.
+  const cleanStates = normalizeParcelStateMap(parcelStates);
+  const json = JSON.stringify(cleanStates, null, 2);
+  const embeddedVersion = 'embedded-' + Date.now();
+  let htmlSource = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+  // Zëvendëso objektin e ngulitur me gjendjen aktuale të parcelave.
+  htmlSource = htmlSource.replace(
+    /const EMBEDDED_PARCEL_STATES = [\s\S]*?;\n(?:const EMBEDDED_DATA_VERSION = [\s\S]*?;\n)?let activeParcelId = null;/,
+    `const EMBEDDED_PARCEL_STATES = ${json};\nconst EMBEDDED_DATA_VERSION = '${embeddedVersion}';\nlet activeParcelId = null;`
+  );
+
+  const blob = new Blob([htmlSource], {type:'text/html;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+  a.href = url;
+  a.download = `parcelimi-me-emra-${stamp}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('HTML me emra u shkarkua');
+}
+document.getElementById('export-html-btn').onclick = exportHTMLWithEmbeddedData;
+document.getElementById('modal-html-btn').onclick = exportHTMLWithEmbeddedData;
+
+function fitDefault(){
+  const isMobile = window.innerWidth <= 760;
+  camera = perspCam;
+  controls.object = camera;
+  if(IS_HERO_RENDER){
+    camera.position.set(168,88,140);
+    controls.target.set(5,2.4,0);
+    camera.fov = 30;
+    camera.updateProjectionMatrix();
+    controls.update();
+    return;
+  }
+  camera.position.set(isMobile ? 118 : 132, isMobile ? 60 : 64, isMobile ? 120 : 128);
+  controls.target.set(0,2.2,0);
+  camera.updateProjectionMatrix();
+  controls.update();
+  document.querySelectorAll('button[data-view]').forEach(b=>b.classList.remove('active'));
+  document.querySelector('button[data-view="perspective"]').classList.add('active');
+}
+fitDefault();
+
+window.addEventListener('resize',()=>{
+  const a=window.innerWidth/window.innerHeight;
+  perspCam.aspect=a; perspCam.updateProjectionMatrix();
+  orthoCam.left=-orthoSize*a; orthoCam.right=orthoSize*a; orthoCam.top=orthoSize; orthoCam.bottom=-orthoSize;
+  orthoCam.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  composer.setSize(window.innerWidth,window.innerHeight);
+  bloomPass.resolution.set(window.innerWidth, window.innerHeight);
+});
+
+function animate(){
+  requestAnimationFrame(animate);
+  labelSprites.forEach(s=>{
+    s.quaternion.copy(camera.quaternion);
+  });
+  controls.update();
+  renderFrame();
+}
+animate();
+</script>
+
+</body></html>

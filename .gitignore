@@ -1,0 +1,19 @@
+# Temporary extraction and QA files
+pptx-extract-location/
+web-prezantim-assets/qa-*.png
+pptx-extract-location/
+*.pptx
+
+# Unused/generated source previews not needed at runtime
+web-prezantim-assets/concept-parcelimi.png
+web-prezantim-assets/render-parcelat-reale.png
+
+# Local/editor clutter
+.DS_Store
+Thumbs.db
+*.log
+
+# Dependencies/build output
+node_modules/
+dist/
+.railway/
