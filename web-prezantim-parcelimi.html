@@ -897,10 +897,20 @@
       .map-frame, .map-frame img {
         min-height: 0;
         height: auto;
-        aspect-ratio: 16 / 10;
+        aspect-ratio: 16 / 9;
+      }
+      .map-frame {
+        width: 100vw;
+        margin-left: -18px;
+        margin-right: -28px;
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
       }
       .map-frame img {
-        object-fit: cover;
+        object-fit: contain;
+        object-position: center;
+        background: #fff;
       }
       .route-stat, .qr-row { grid-template-columns: 1fr; }
       .route-stat b { font-size: 30px; }
