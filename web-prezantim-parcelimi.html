@@ -837,33 +837,71 @@
         gap: 10px;
       }
       .row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
         overflow: visible;
       }
       .plot {
-        min-height: 112px;
-        padding: 10px;
+        min-height: 84px;
+        padding: 9px;
       }
-      .plot strong { font-size: 16px; }
-      .plot span { font-size: 11px; }
-      .plot .mini-house {
-        width: min(46px, 54%);
-        bottom: 12px;
-      }
+      .plot strong { font-size: 15px; }
+      .plot span { font-size: 10px; margin-top: 2px; }
+      .plot .mini-house { display: none; }
       .plot.sold::after {
-        top: 13px;
-        right: -28px;
-        width: 84%;
-        min-height: 24px;
-        font-size: 10px;
+        top: 11px;
+        right: -23px;
+        width: 90%;
+        min-height: 21px;
+        font-size: 8px;
       }
       .road { height: 40px; font-size: 11px; }
-      .detail-panel { min-height: auto; }
-      .detail-top h3 { font-size: 34px; }
-      .price { font-size: 38px; }
+      .row .detail-panel {
+        grid-column: 1 / -1;
+        margin: 4px 0 10px;
+      }
+      .detail-panel {
+        min-height: auto;
+        padding: 18px;
+        gap: 14px;
+      }
+      .detail-top h3 { font-size: 32px; }
+      .detail-list { border-radius: 8px; }
+      .detail-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 11px 12px;
+        font-size: 13px;
+      }
+      .detail-row b {
+        text-align: left;
+        overflow-wrap: anywhere;
+        white-space: normal;
+      }
+      .price { font-size: 34px; }
       .location-card { padding: 18px; }
-      .map-frame, .map-frame img { min-height: 280px; }
+      .location-card,
+      .location-card * {
+        max-width: 100%;
+      }
+      .location-card { overflow: hidden; }
+      .location-card .detail-row { grid-template-columns: 1fr; }
+      .location-card .detail-row b { text-align: left; }
+      .route-list li span,
+      .qr-row p,
+      .qr-row strong {
+        min-width: 0;
+        overflow-wrap: break-word;
+      }
+      .map-frame, .map-frame img {
+        min-height: 0;
+        height: auto;
+        aspect-ratio: 16 / 10;
+      }
+      .map-frame img {
+        object-fit: cover;
+      }
       .route-stat, .qr-row { grid-template-columns: 1fr; }
       .route-stat b { font-size: 30px; }
       .qr-row img {
@@ -931,7 +969,7 @@
     @media (max-width: 420px) {
       .hero h1 { font-size: clamp(30px, 8.4vw, 36px); }
       .metrics { grid-template-columns: 1fr 1fr; gap: 8px; }
-      .row { grid-template-columns: 1fr 1fr; }
+      .row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     @media print {
@@ -995,11 +1033,11 @@
 
       <section class="section" id="lokacioni">
         <div class="section-head">
-          <h2>Orientim i qartë i lokacionit.</h2>
+          <h2>Lokacioni.</h2>
         </div>
         <div class="location-grid">
           <figure class="map-frame" aria-label="Harta e rrugës Çagllavicë - Prishtina Mall - Gllavicë">
-            <img src="web-prezantim-assets/lokacioni-rruga.png" alt="Harta e rrugës nga Çagllavica përmes Prishtina Mall deri te toka në Gllavicë">
+            <img src="web-prezantim-assets/lokacioni-rruga.png" alt="Harta e lokacionit">
           </figure>
           <aside class="location-card">
             <div class="route-stat">
@@ -1020,7 +1058,7 @@
               <img src="web-prezantim-assets/qr-google-maps.png" alt="QR kod për hapjen e rrugës në Google Maps">
               <div>
                 <strong>Hape rrugën në telefon</strong>
-                <p class="muted">QR-i dhe linku hapin rrugën në Google Maps me ndalesën te Prishtina Mall dhe destinacionin në Gllavicë.</p>
+                <p class="muted">QR-i dhe linku hapin rrugën në Google Maps.</p>
                 <a class="map-link" href="https://maps.app.goo.gl/Mey8mBYM8AiZmSuF7" target="_blank" rel="noopener">Hap Google Maps</a>
               </div>
             </div>
@@ -1030,8 +1068,8 @@
 
       <section class="section" id="plan">
         <div class="section-head">
-          <h2>Masterplan i lexueshëm për prezantim.</h2>
-          <p>Zgjidh një parcelë në skemë për të parë statusin, pronarin, sipërfaqen dhe çmimin e truallit. Skema është ndërtuar për prezantim, jo për zëvendësim të matjeve kadastrale.</p>
+          <h2>Masterplani.</h2>
+          <p>Zgjidh një parcelë për të parë statusin, sipërfaqen dhe çmimin e truallit.</p>
         </div>
 
         <div class="plan-grid">
