@@ -622,6 +622,25 @@
     tr:last-child td { border-bottom: 0; }
     .money { color: var(--blue); white-space: nowrap; }
     .muted { color: var(--muted); }
+    .table-wrap .chip {
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0;
+      border: 1px solid transparent;
+    }
+    .table-wrap .chip.free {
+      background: #dff2da;
+      color: #245f2f;
+      border-color: #a8d39f;
+    }
+    .table-wrap .chip.sold {
+      background: #ffe0de;
+      color: #a12420;
+      border-color: #efa29d;
+    }
 
     .sizes {
       display: grid;
@@ -942,7 +961,7 @@
         <a href="#inventari">Inventari</a>
         <a href="#teknike">Teknike</a>
       </div>
-      <a class="nav-action" href="parcelimi-me-emra-2026-06-02-10-19-05%20(8).html">Hap 3D</a>
+      <a class="nav-action" href="https://maps.app.goo.gl/Mey8mBYM8AiZmSuF7" target="_blank" rel="noopener">Hap hartën</a>
     </nav>
 
     <main id="top">
@@ -968,7 +987,6 @@
       </section>
 
       <section class="metrics" aria-label="Përmbledhje kryesore">
-        <div class="metric"><b>~152</b><span>Ari gjithsej</span></div>
         <div class="metric"><b>18</b><span>Parcela</span></div>
         <div class="metric"><b>8</b><span>Në dispozicion</span></div>
         <div class="metric"><b>10</b><span>Të shitura</span></div>
@@ -978,7 +996,6 @@
       <section class="section" id="lokacioni">
         <div class="section-head">
           <h2>Orientim i qartë i lokacionit.</h2>
-          <p>Rruga prezantohet nga Çagllavica, me pikë referuese Prishtina Mall, dhe përfundon te toka në shitje në Gllavicë. Ky orientim është i përshtatshëm për klientë që duan ta kuptojnë lokacionin shpejt para vizitës në terren.</p>
         </div>
         <div class="location-grid">
           <figure class="map-frame" aria-label="Harta e rrugës Çagllavicë - Prishtina Mall - Gllavicë">
@@ -986,7 +1003,7 @@
           </figure>
           <aside class="location-card">
             <div class="route-stat">
-              <div><b>17.68 km</b><span>Distanca</span></div>
+              <div><b>17 km</b><span>Distanca</span></div>
               <div><b>20 min</b><span>Koha rreth</span></div>
             </div>
             <ul class="route-list">
@@ -1037,9 +1054,7 @@
             <div class="detail-list">
               <div class="detail-row"><span>Pronari / Statusi</span><b id="detailOwner">E Lirë</b></div>
               <div class="detail-row"><span>Sipërfaqja</span><b id="detailArea">625 m² · 6.25 ari</b></div>
-              <div class="detail-row"><span>Objekti total</span><b id="detailHouse">270 m²</b></div>
               <div class="detail-row"><span>Kate</span><b>P + 1</b></div>
-              <div class="detail-row"><span>Dhomat</span><b id="detailRooms">3 dhoma · 2 banjo</b></div>
             </div>
             <div>
               <div class="price" id="detailPrice">€31,250</div>
@@ -1126,14 +1141,15 @@
     const bottomRow = document.querySelector("#bottomRow");
     const table = document.querySelector("#parcelTable");
     const inventoryCount = document.querySelector("#inventoryCount");
+    const planGrid = document.querySelector(".plan-grid");
+    const masterplan = document.querySelector(".masterplan");
+    const detailPanel = document.querySelector("#detailPanel");
     const detail = {
       id: document.querySelector("#detailId"),
       status: document.querySelector("#detailStatus"),
       type: document.querySelector("#detailType"),
       owner: document.querySelector("#detailOwner"),
       area: document.querySelector("#detailArea"),
-      house: document.querySelector("#detailHouse"),
-      rooms: document.querySelector("#detailRooms"),
       price: document.querySelector("#detailPrice"),
       priceSub: document.querySelector("#detailPriceSub")
     };
@@ -1161,16 +1177,23 @@
     function selectParcel(id) {
       const parcel = parcels.find(item => item.id === id) || parcels[1];
       document.querySelectorAll(".plot").forEach(item => item.classList.toggle("active", item.dataset.id === id));
+      placeDetailPanel(document.querySelector(`.plot[data-id="${id}"]`));
       detail.id.textContent = parcel.id;
       detail.status.textContent = statusLabel(parcel.status);
       detail.status.className = `chip ${parcel.status}`;
       detail.type.textContent = `Tip ${parcel.type}`;
       detail.owner.textContent = parcel.owner;
       detail.area.textContent = parcel.area;
-      detail.house.textContent = `${parcel.house * 2} m²`;
-      detail.rooms.textContent = `${parcel.beds} dhoma · ${parcel.baths} banjo`;
       detail.price.textContent = displayPrice(parcel);
       detail.priceSub.textContent = displayPriceSub(parcel);
+    }
+
+    function placeDetailPanel(selectedPlot) {
+      if (window.matchMedia("(max-width: 760px)").matches && selectedPlot) {
+        selectedPlot.insertAdjacentElement("afterend", detailPanel);
+      } else if (detailPanel.parentElement !== planGrid) {
+        planGrid.insertBefore(detailPanel, masterplan.nextSibling);
+      }
     }
 
     function renderTable(filter = "all") {
@@ -1198,6 +1221,10 @@
     renderPlan();
     renderTable();
     selectParcel("P2");
+
+    window.addEventListener("resize", () => {
+      placeDetailPanel(document.querySelector(".plot.active"));
+    });
   </script>
 </body>
 </html>
