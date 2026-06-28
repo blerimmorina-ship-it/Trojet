@@ -40,6 +40,7 @@
 
     .shell {
       min-height: 100vh;
+      overflow-x: hidden;
       background:
         linear-gradient(90deg, rgba(23,33,31,.05) 1px, transparent 1px),
         linear-gradient(180deg, rgba(23,33,31,.045) 1px, transparent 1px);
@@ -150,6 +151,7 @@
 
     .hero-visual {
       position: relative;
+      margin: 0;
       min-height: 560px;
       border-radius: 8px;
       overflow: hidden;
@@ -708,34 +710,209 @@
     }
 
     @media (max-width: 760px) {
-      .nav { align-items: flex-start; }
+      .nav {
+        align-items: center;
+        padding: 14px 16px;
+      }
+      .brand { gap: 10px; font-size: 15px; }
+      .mark { width: 36px; height: 36px; border-radius: 8px; }
       .nav-links { display: none; }
       .nav-action { display: none; }
-      .hero { padding-top: 36px; }
+      .hero {
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 34px 28px 28px 18px;
+        overflow: hidden;
+      }
+      .hero > * { min-width: 0; }
+      .hero h1,
+      .hero p,
+      .hero-actions,
+      .hero-visual {
+        width: min(100%, calc(100vw - 54px));
+      }
       .hero h1 {
         max-width: 100%;
-        font-size: clamp(31px, 8.2vw, 36px);
-        line-height: 1.02;
-        overflow-wrap: normal;
+        font-size: clamp(30px, 8.6vw, 38px);
+        line-height: 1.05;
+        overflow-wrap: break-word;
+        text-wrap: balance;
       }
-      .hero-visual { min-height: 360px; }
+      .hero p {
+        max-width: 100%;
+        margin-top: 16px;
+        font-size: 16px;
+        line-height: 1.55;
+        overflow-wrap: break-word;
+      }
+      .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 22px;
+        align-self: stretch;
+        max-width: 100%;
+      }
+      .primary, .secondary {
+        width: auto;
+        max-width: 100%;
+        min-height: 46px;
+        padding-inline: 12px;
+        font-size: 14px;
+      }
+      .hero-visual {
+        align-self: stretch;
+        min-height: 0;
+        aspect-ratio: 1 / 1;
+        border-radius: 8px;
+      }
       .hero-visual img {
         object-position: center;
-        transform: scale(1.08);
+        transform: scale(1.13);
       }
-      .visual-caption { display: block; }
-      .metrics, .sizes { grid-template-columns: 1fr; }
-      .metric { min-height: 112px; }
+      .visual-caption {
+        display: grid;
+        grid-template-columns: 1fr;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+      }
+      .visual-caption strong { font-size: 34px; }
+      .visual-caption span { max-width: 100%; font-size: 12px; }
+      .visual-caption span { overflow-wrap: break-word; }
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        padding: 0 28px 28px 18px;
+      }
+      .metric {
+        min-height: 104px;
+        padding: 16px;
+        border-radius: 8px!important;
+      }
+      .metric:last-child { grid-column: 1 / -1; }
+      .metric b { font-size: 30px; }
+      .metric span { font-size: 11px; }
+      .sizes { grid-template-columns: 1fr; }
+      .section {
+        padding: 48px 28px 48px 18px;
+      }
+      .section-head {
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+      .section h2 {
+        font-size: clamp(30px, 9vw, 40px);
+        line-height: 1.04;
+      }
+      .section-head p {
+        font-size: 15px;
+        line-height: 1.55;
+      }
       .masterplan { padding: 14px; }
-      .plan-canvas { min-height: 640px; grid-template-rows: 1fr 44px 1fr; }
-      .row { grid-template-columns: repeat(3, minmax(84px, 1fr)); overflow-x: auto; }
-      .plot { min-height: 150px; }
+      .plan-canvas {
+        min-height: auto;
+        grid-template-rows: auto 40px auto;
+        gap: 10px;
+      }
+      .row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        overflow: visible;
+      }
+      .plot {
+        min-height: 112px;
+        padding: 10px;
+      }
+      .plot strong { font-size: 16px; }
+      .plot span { font-size: 11px; }
+      .plot .mini-house {
+        width: min(46px, 54%);
+        bottom: 12px;
+      }
+      .plot.sold::after {
+        top: 13px;
+        right: -28px;
+        width: 84%;
+        min-height: 24px;
+        font-size: 10px;
+      }
+      .road { height: 40px; font-size: 11px; }
       .detail-panel { min-height: auto; }
+      .detail-top h3 { font-size: 34px; }
+      .price { font-size: 38px; }
+      .location-card { padding: 18px; }
       .map-frame, .map-frame img { min-height: 280px; }
       .route-stat, .qr-row { grid-template-columns: 1fr; }
+      .route-stat b { font-size: 30px; }
+      .qr-row img {
+        width: 132px;
+        height: 132px;
+      }
       .inventory-tools { display: block; }
       .filters { margin-top: 14px; }
-      .section { padding-block: 54px; }
+      .filter {
+        min-height: 36px;
+        font-size: 12px;
+      }
+      .table-wrap {
+        overflow: visible;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+      table {
+        min-width: 0;
+        width: 100%;
+        display: block;
+      }
+      thead { display: none; }
+      tbody {
+        display: grid;
+        gap: 10px;
+      }
+      tr {
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 8px 12px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--paper);
+        box-shadow: 0 12px 26px rgba(24, 42, 36, .06);
+      }
+      td {
+        display: block;
+        padding: 0;
+        border: 0;
+        font-size: 13px;
+      }
+      td:first-child {
+        grid-row: span 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 58px;
+        border-radius: 8px;
+        background: var(--soft);
+        font-family: Manrope, Inter, sans-serif;
+        font-size: 20px;
+      }
+      td:nth-child(2) { font-size: 14px; }
+      td:nth-child(3), td:nth-child(4) { color: var(--muted); }
+      td:last-child { align-self: start; }
+      .size-block { min-height: 176px; padding: 20px; }
+      .size-block strong { font-size: 34px; }
+      .closing { gap: 24px; }
+      footer { padding: 22px 18px; }
+    }
+
+    @media (max-width: 420px) {
+      .hero h1 { font-size: clamp(30px, 8.4vw, 36px); }
+      .metrics { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .row { grid-template-columns: 1fr 1fr; }
     }
 
     @media print {
