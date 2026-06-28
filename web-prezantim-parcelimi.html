@@ -955,10 +955,6 @@
               <svg class="btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               Shiko masterplanin
             </a>
-            <button class="secondary" type="button" id="printBtn">
-              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2M7 14h10v6H7z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-              Printo
-            </button>
           </div>
         </div>
 
@@ -1212,8 +1208,6 @@
         renderTable(button.dataset.filter);
       });
     });
-
-    document.querySelector("#printBtn").addEventListener("click", () => window.print());
 
     renderPlan();
     renderTable();
