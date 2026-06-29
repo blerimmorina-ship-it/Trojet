@@ -70,7 +70,7 @@
     }
     .brand-logo {
       display: block;
-      width: clamp(112px, 10vw, 148px);
+      width: clamp(96px, 8vw, 124px);
       height: auto;
     }
     .nav-links {
@@ -102,15 +102,16 @@
       grid-template-columns: minmax(0, .85fr) minmax(460px, 1.15fr);
       align-items: center;
       gap: clamp(28px, 5vw, 72px);
-      padding: clamp(36px, 7vw, 96px) clamp(18px, 4vw, 58px) 42px;
+      padding: clamp(28px, 5vw, 72px) clamp(18px, 4vw, 58px) 36px;
     }
     .hero h1 {
       max-width: 760px;
       margin: 0;
       font-family: Manrope, Inter, sans-serif;
-      font-size: clamp(44px, 6.2vw, 86px);
-      line-height: .97;
+      font-size: clamp(40px, 5.3vw, 72px);
+      line-height: 1;
       letter-spacing: 0;
+      text-wrap: balance;
     }
     .hero p {
       max-width: 620px;
@@ -123,7 +124,56 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 12px;
-      margin-top: 34px;
+      margin-top: 30px;
+    }
+    .trust-points {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 650px;
+      margin-top: 16px;
+    }
+    .trust-point {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 70px;
+      padding: 12px;
+      border: 1px solid rgba(219, 225, 222, .9);
+      border-radius: 8px;
+      background: rgba(255,255,255,.68);
+    }
+    .trust-icon {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--green-soft);
+      color: var(--green);
+    }
+    .trust-icon svg {
+      width: 17px;
+      height: 17px;
+    }
+    .trust-copy {
+      min-width: 0;
+    }
+    .trust-copy b {
+      display: block;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+    .trust-copy span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
     }
     .primary, .secondary {
       display: inline-flex;
@@ -146,7 +196,7 @@
     .hero-visual {
       position: relative;
       margin: 0;
-      min-height: 560px;
+      min-height: clamp(420px, 58vh, 560px);
       border-radius: 8px;
       overflow: hidden;
       background: #dde5e1;
@@ -198,7 +248,7 @@
 
     .metrics {
       display: grid;
-      grid-template-columns: repeat(5, minmax(140px, 1fr));
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
       gap: 1px;
       padding: 0 clamp(18px, 4vw, 58px) 46px;
     }
@@ -223,6 +273,52 @@
       font-size: 13px;
       font-weight: 800;
       text-transform: uppercase;
+    }
+
+    .assurance-band {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      padding: 0 clamp(18px, 4vw, 58px) 52px;
+    }
+    .assurance-item {
+      min-height: 118px;
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.78);
+    }
+    .assurance-item:first-child { border-radius: 8px 0 0 8px; }
+    .assurance-item:last-child { border-radius: 0 8px 8px 0; }
+    .assurance-index {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #f7efe2;
+      color: var(--gold-dark);
+      font-family: Manrope, Inter, sans-serif;
+      font-weight: 900;
+    }
+    .assurance-copy {
+      min-width: 0;
+    }
+    .assurance-copy b {
+      display: block;
+      font-size: 15px;
+      font-weight: 900;
+    }
+    .assurance-copy span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.45;
     }
 
     .section {
@@ -567,6 +663,57 @@
       gap: 18px;
       margin-bottom: 18px;
     }
+    .inventory-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 16px;
+    }
+    .status-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .status-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 28px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.74);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .status-legend i {
+      width: 9px;
+      height: 9px;
+      border-radius: 99px;
+      background: var(--free);
+    }
+    .status-legend .sold-key { background: #c83232; }
+    .inventory-note {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      margin: -2px 0 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--gold);
+      border-radius: 8px;
+      background: rgba(255,255,255,.82);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+    .inventory-note b,
+    .inventory-note strong {
+      color: var(--ink);
+    }
     .filters {
       display: flex;
       flex-wrap: wrap;
@@ -720,6 +867,12 @@
       .hero-visual { min-height: 460px; }
       .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .metric:first-child, .metric:last-child { border-radius: 0; }
+      .assurance-band { grid-template-columns: 1fr; gap: 8px; }
+      .assurance-item,
+      .assurance-item:first-child,
+      .assurance-item:last-child {
+        border-radius: 8px;
+      }
       .sizes { grid-template-columns: repeat(2, 1fr); }
     }
 
@@ -740,11 +893,21 @@
         overflow: hidden;
       }
       .hero > * { min-width: 0; }
+      .hero > div {
+        flex: 0 0 auto;
+        width: calc(100vw - 46px);
+        max-width: calc(100vw - 46px);
+      }
       .hero h1,
       .hero p,
       .hero-actions,
+      .trust-points {
+        width: 100%;
+        max-width: 100%;
+      }
       .hero-visual {
-        width: min(100%, calc(100vw - 54px));
+        width: calc(100vw - 46px);
+        max-width: calc(100vw - 46px);
       }
       .hero h1 {
         max-width: 100%;
@@ -774,6 +937,15 @@
         min-height: 46px;
         padding-inline: 12px;
         font-size: 14px;
+      }
+      .trust-points {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .trust-point {
+        min-height: 64px;
+        padding: 11px;
       }
       .hero-visual {
         align-self: stretch;
@@ -805,9 +977,20 @@
         padding: 16px;
         border-radius: 8px!important;
       }
-      .metric:last-child { grid-column: 1 / -1; }
       .metric b { font-size: 30px; }
       .metric span { font-size: 11px; }
+      .assurance-band {
+        padding: 0 28px 34px 18px;
+      }
+      .assurance-item {
+        min-height: auto;
+        grid-template-columns: 34px minmax(0, 1fr);
+        padding: 15px;
+      }
+      .assurance-index {
+        width: 34px;
+        height: 34px;
+      }
       .sizes { grid-template-columns: 1fr; }
       .section {
         padding: 48px 28px 48px 18px;
@@ -912,7 +1095,20 @@
         width: 132px;
         height: 132px;
       }
-      .inventory-tools { display: block; }
+      .inventory-tools {
+        display: grid;
+        gap: 14px;
+      }
+      .inventory-meta {
+        display: grid;
+        gap: 10px;
+      }
+      .inventory-note {
+        grid-template-columns: 1fr;
+        margin: 0 0 16px;
+        padding: 13px 14px;
+        font-size: 13px;
+      }
       .filters { margin-top: 14px; }
       .filter {
         min-height: 36px;
@@ -1004,12 +1200,30 @@
       <section class="hero">
         <div>
           <h1>Lagje Rezidenciale - Parcelimi 3D</h1>
-          <p>Prezantim i parcelimit me 18 vila P+1, status të pronave, sipërfaqe të standardizuara dhe çmim referent të truallit për vendimmarrje të shpejtë.</p>
+          <p>Parcelim me 18 vila P+1. Status i qartë për çdo parcelë, sipërfaqe të standardizuara dhe çmim referent i truallit.</p>
           <div class="hero-actions">
             <a class="primary" href="#plan">
               <svg class="btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               Shiko masterplanin
             </a>
+            <a class="secondary" href="https://maps.app.goo.gl/Mey8mBYM8AiZmSuF7" target="_blank" rel="noopener">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-5.1 7-11a7 7 0 1 0-14 0c0 5.9 7 11 7 11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10.5h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+              Hap Google Maps
+            </a>
+          </div>
+          <div class="trust-points" aria-label="Pika besueshmërie">
+            <div class="trust-point">
+              <span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M20 7 10 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="trust-copy"><b>Lokacion i verifikueshëm</b><span>Google Maps dhe QR për vizitë në terren.</span></span>
+            </div>
+            <div class="trust-point">
+              <span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+              <span class="trust-copy"><b>Status i lexueshëm</b><span>Të lirat dhe të shiturat ndahen qartë.</span></span>
+            </div>
+            <div class="trust-point">
+              <span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 5 6v5c0 4.5 3 8.4 7 10 4-1.6 7-5.5 7-10V6l-7-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
+              <span class="trust-copy"><b>Privatësi në shitje</b><span>Çmimet e shitura ruhen si xxxxx.</span></span>
+            </div>
           </div>
         </div>
 
@@ -1027,6 +1241,21 @@
         <div class="metric"><b>8</b><span>Në dispozicion</span></div>
         <div class="metric"><b>10</b><span>Të shitura</span></div>
         <div class="metric"><b>5,000</b><span>EUR / ari</span></div>
+      </section>
+
+      <section class="assurance-band" aria-label="Transparencë dhe verifikim">
+        <div class="assurance-item">
+          <span class="assurance-index">01</span>
+          <span class="assurance-copy"><b>Orientim para vizitës</b><span>Harta, distanca dhe QR-i ndihmojnë klientin ta verifikojë lokacionin menjëherë.</span></span>
+        </div>
+        <div class="assurance-item">
+          <span class="assurance-index">02</span>
+          <span class="assurance-copy"><b>Inventar transparent</b><span>Çdo parcelë shfaq sipërfaqen, statusin dhe çmimin referent kur prona është në dispozicion.</span></span>
+        </div>
+        <div class="assurance-item">
+          <span class="assurance-index">03</span>
+          <span class="assurance-copy"><b>Verifikim final</b><span>Statuset dhe sipërfaqet shërbejnë për prezantim; vendimi final lidhet me dokumentacionin zyrtar.</span></span>
+        </div>
       </section>
 
       <section class="section" id="lokacioni">
@@ -1106,13 +1335,20 @@
           <p>Tabela mban statuset e materialit origjinal dhe shërben si pamje e shpejtë për prezantim, diskutim dhe printim.</p>
         </div>
         <div class="inventory-tools">
-          <strong id="inventoryCount">18 parcela në listë</strong>
+          <div class="inventory-meta">
+            <strong id="inventoryCount">18 parcela në listë</strong>
+            <div class="status-legend" aria-label="Legjenda e statusit">
+              <span><i aria-hidden="true"></i>Në dispozicion</span>
+              <span><i class="sold-key" aria-hidden="true"></i>E shitur</span>
+            </div>
+          </div>
           <div class="filters" aria-label="Filtro parcelat">
             <button class="filter active" type="button" data-filter="all">Të gjitha</button>
             <button class="filter" type="button" data-filter="free">Në dispozicion</button>
             <button class="filter" type="button" data-filter="sold">Të shitura</button>
           </div>
         </div>
+        <p class="inventory-note"><b>Shënim transparence:</b> Çmimet e pronave të shitura shfaqen si <strong>xxxxx</strong> për privatësi. Sipërfaqet dhe statuset janë për prezantim; para vendimit final verifikohen me dokumentacion kadastral dhe marrëveshje zyrtare.</p>
         <div class="table-wrap">
           <table>
             <thead>
