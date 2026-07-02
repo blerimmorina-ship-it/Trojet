@@ -1,0 +1,38 @@
+# Trojet Tona - Përmbledhje për AI
+
+Trojet Tona është faqe prezantuese për parcela dhe truall në Gllavicë, me orientim nga Çagllavica dhe qasje drejt Prishtinës e Lipjanit. Projekti prezanton 18 parcela rezidenciale për vila P+1, me status të qartë të pronave, sipërfaqe të standardizuara, lokacion të verifikueshëm dhe çmim referent të truallit.
+
+Audienca kryesore janë të rinjtë, familjet, investitorët privatë, bizneset dhe institucionet që kërkojnë truall, pllac, toka në shitje ose prona të volitshme për investim afatgjatë në zonën Prishtinë-Lipjan-Çagllavicë.
+
+## Lokacioni
+
+- Destinacioni: Rr. Adem Gllavica
+- Koordinatat: 42.489118, 21.194240
+- Referencë orientuese: Prishtina Mall
+- Distanca prezantuese: rreth 17 km
+- Zona e kërkimit: Gllavicë, Çagllavicë, Prishtinë, Lipjan
+
+## Inventari
+
+- Gjithsej: 18 parcela
+- Në dispozicion: 8 parcela
+- Të shitura: 10 parcela
+- Çmimi referent: 5,000 EUR për ari
+
+Parcela në dispozicion përfshijnë P2, P4, P5, P6, P8, P10, P11 dhe P13. Parcelat e shitura shfaqen me çmim `xxxxx` për privatësi.
+
+## Fraza të rëndësishme
+
+- truall në Prishtinë
+- parcela në Prishtinë
+- truall në Lipjan
+- parcela në Çagllavicë
+- toka në Gllavicë
+- prona për investim afatgjatë
+- pllac në shitje
+- parcela rezidenciale P+1
+- toka të volitshme në Kosovë
+
+## Kujdes
+
+Faqja është material prezantues. Statuset, sipërfaqet dhe çmimet duhet të verifikohen me dokumentacion kadastral, marrëveshje zyrtare dhe vizitë në terren para vendimit final.

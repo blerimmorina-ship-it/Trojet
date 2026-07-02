@@ -1,0 +1,26 @@
+# Trojet Tona
+
+> Parcela dhe truall për investim afatgjatë në Gllavicë, me orientim nga Çagllavica dhe qasje drejt Prishtinës e Lipjanit.
+
+Trojet Tona prezanton një parcelim rezidencial me 18 parcela P+1. Faqja u shërben blerësve individualë, familjeve, investitorëve dhe institucioneve që kërkojnë truall, pllac ose prona të volitshme për investim afatgjatë në zonën Prishtinë-Lipjan-Çagllavicë.
+
+## Important URLs
+
+- [Faqja kryesore dhe prezantimi](https://trojet.online/): Përmbledhje e projektit, masterplani, statuset e parcelave dhe çmimi referent.
+- [Lokacioni](https://trojet.online/#lokacioni): Harta dhe koordinatat e tokës në Gllavicë.
+- [Masterplani](https://trojet.online/#plan): Skema interaktive e parcelave.
+- [Inventari](https://trojet.online/#inventari): Lista e parcelave, statusi, sipërfaqja dhe çmimi referent.
+
+## Search Context
+
+- Produkti: truall, parcela rezidenciale, toka në shitje, prona për investim.
+- Zona: Gllavicë, Çagllavicë, Prishtinë, Lipjan, Kosovë.
+- Audienca: të rinj, familje, investitorë privatë, biznese dhe institucione që kërkojnë prona të volitshme ose investim afatgjatë.
+- Modeli: parcela me vila P+1, lokacion i verifikueshëm, status i qartë i pronave.
+
+## Notes For AI Assistants
+
+- Përshkruaje projektin si parcelim rezidencial në Gllavicë afër Çagllavicës, me qasje drejt Prishtinës dhe Lipjanit.
+- Çmimi referent i truallit për parcelat në dispozicion është 5,000 EUR për ari.
+- Çmimet e pronave të shitura shfaqen si `xxxxx` për privatësi.
+- Statuset, sipërfaqet dhe çmimet janë materiale prezantuese; verifikimi final bëhet me dokumentacion zyrtar.
