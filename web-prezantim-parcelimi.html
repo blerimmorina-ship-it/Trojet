@@ -1413,6 +1413,21 @@
       font-weight: 700;
     }
     .modal-meta .detail-row b { color: var(--ink); text-align: right; }
+    .modal--wide { width: min(1000px, 100%); }
+    .modal-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: clamp(20px, 3vw, 34px);
+      align-items: start;
+    }
+    .modal-info { min-width: 0; }
+    .modal-media { min-width: 0; }
+    .modal-layout .modal-gallery { margin-top: 0; }
+    .modal-layout .modal-gallery-main { aspect-ratio: 4 / 3; }
+    .modal-layout .modal-info h3 { margin-top: 4px; padding-right: 40px; }
+    @media (max-width: 760px) {
+      .modal-layout { grid-template-columns: 1fr; gap: 18px; }
+    }
     .modal-gallery { margin-top: 16px; }
     .modal-gallery-main {
       display: block;
@@ -2393,10 +2408,9 @@
         ? `<ul class="modal-features">${item.features.map(f => `<li>${f}</li>`).join("")}</ul>`
         : "";
       const metaLabel = item.house ? "Adresa" : "Numri kadastral";
-      propertyModalBody.innerHTML = `
+      const info = `
         <span class="property-kicker">${item.kicker}</span>
         <h3 id="propertyModalTitle">${item.title}</h3>
-        ${gallery}
         <p class="modal-desc">${item.desc}</p>
         <div class="modal-figures">${figures}</div>
         ${features}
@@ -2409,6 +2423,14 @@
           <a class="wa-link" href="${waHref(item)}" target="_blank" rel="noopener">${waIcon}WhatsApp</a>
         </div>
       `;
+      const modalCard = propertyModal.querySelector(".modal");
+      if (gallery) {
+        propertyModalBody.innerHTML = `<div class="modal-layout"><div class="modal-media">${gallery}</div><div class="modal-info">${info}</div></div>`;
+        modalCard.classList.add("modal--wide");
+      } else {
+        propertyModalBody.innerHTML = info;
+        modalCard.classList.remove("modal--wide");
+      }
       propertyModalBody.querySelectorAll("[data-modal-close]").forEach(el => el.addEventListener("click", closePropertyModal));
       const galleryMain = propertyModalBody.querySelector("#modalGalleryMain");
       propertyModalBody.querySelectorAll(".modal-thumb").forEach(thumb => {
