@@ -1413,7 +1413,17 @@
       font-weight: 700;
     }
     .modal-meta .detail-row b { color: var(--ink); text-align: right; }
-    .modal--wide { width: min(1000px, 100%); }
+    .modal-overlay.overlay--full { padding: 0; }
+    .modal--wide {
+      width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+      border-radius: 0;
+    }
+    .modal--wide .modal-media .modal-gallery-main {
+      aspect-ratio: auto;
+      height: clamp(300px, 64vh, 820px);
+    }
     .modal-layout {
       display: grid;
       grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
@@ -2285,7 +2295,38 @@
           "web-prezantim-assets/shtepia/shtepia-05.jpg",
           "web-prezantim-assets/shtepia/shtepia-06.jpg",
           "web-prezantim-assets/shtepia/shtepia-07.jpg",
-          "web-prezantim-assets/shtepia/shtepia-08.jpg"
+          "web-prezantim-assets/shtepia/shtepia-08.jpg",
+          "web-prezantim-assets/shtepia/shtepia-09.jpg",
+          "web-prezantim-assets/shtepia/shtepia-10.jpg",
+          "web-prezantim-assets/shtepia/shtepia-11.jpg",
+          "web-prezantim-assets/shtepia/shtepia-12.jpg",
+          "web-prezantim-assets/shtepia/shtepia-13.jpg",
+          "web-prezantim-assets/shtepia/shtepia-14.jpg",
+          "web-prezantim-assets/shtepia/shtepia-15.jpg",
+          "web-prezantim-assets/shtepia/shtepia-16.jpg",
+          "web-prezantim-assets/shtepia/shtepia-17.jpg",
+          "web-prezantim-assets/shtepia/shtepia-18.jpg",
+          "web-prezantim-assets/shtepia/shtepia-19.jpg",
+          "web-prezantim-assets/shtepia/shtepia-20.jpg",
+          "web-prezantim-assets/shtepia/shtepia-21.jpg",
+          "web-prezantim-assets/shtepia/shtepia-22.jpg",
+          "web-prezantim-assets/shtepia/shtepia-23.jpg",
+          "web-prezantim-assets/shtepia/shtepia-24.jpg",
+          "web-prezantim-assets/shtepia/shtepia-25.jpg",
+          "web-prezantim-assets/shtepia/shtepia-26.jpg",
+          "web-prezantim-assets/shtepia/shtepia-27.jpg",
+          "web-prezantim-assets/shtepia/shtepia-28.jpg",
+          "web-prezantim-assets/shtepia/shtepia-29.jpg",
+          "web-prezantim-assets/shtepia/shtepia-30.jpg",
+          "web-prezantim-assets/shtepia/shtepia-31.jpg",
+          "web-prezantim-assets/shtepia/shtepia-32.jpg",
+          "web-prezantim-assets/shtepia/shtepia-33.jpg",
+          "web-prezantim-assets/shtepia/shtepia-34.jpg",
+          "web-prezantim-assets/shtepia/shtepia-35.jpg",
+          "web-prezantim-assets/shtepia/shtepia-36.jpg",
+          "web-prezantim-assets/shtepia/shtepia-37.jpg",
+          "web-prezantim-assets/shtepia/shtepia-38.jpg",
+          "web-prezantim-assets/shtepia/shtepia-39.jpg"
         ],
         mapHref: "https://maps.app.goo.gl/ETPpojCSqZaw92V2A"
       },
@@ -2427,9 +2468,11 @@
       if (gallery) {
         propertyModalBody.innerHTML = `<div class="modal-layout"><div class="modal-media">${gallery}</div><div class="modal-info">${info}</div></div>`;
         modalCard.classList.add("modal--wide");
+        propertyModal.classList.add("overlay--full");
       } else {
         propertyModalBody.innerHTML = info;
         modalCard.classList.remove("modal--wide");
+        propertyModal.classList.remove("overlay--full");
       }
       propertyModalBody.querySelectorAll("[data-modal-close]").forEach(el => el.addEventListener("click", closePropertyModal));
       const galleryMain = propertyModalBody.querySelector("#modalGalleryMain");
