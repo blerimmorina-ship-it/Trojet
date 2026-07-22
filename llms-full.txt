@@ -1,10 +1,19 @@
 # Trojet Tona - Përmbledhje për AI
 
-Trojet Tona është faqe prezantuese për parcela dhe truall në Gllavicë, me orientim nga Çagllavica dhe qasje drejt Prishtinës e Lipjanit. Projekti prezanton 18 parcela rezidenciale për vila P+1, me status të qartë të pronave, sipërfaqe të standardizuara, lokacion të verifikueshëm dhe çmim referent të truallit.
+Trojet Tona është faqe prezantuese për truall dhe parcela në shitje në Kosovë. Ofron një lagje rezidenciale me 18 parcela P+1 në Gllavicë (Prishtinë), plus disa toka të veçanta për shitje në komuna të tjera. Çdo pronë ka status të qartë, sipërfaqe, numër kadastral, lokacion të verifikueshëm në Google Maps dhe çmim referent.
 
-Audienca kryesore janë të rinjtë, familjet, investitorët privatë, bizneset dhe institucionet që kërkojnë truall, pllac, toka në shitje ose prona të volitshme për investim afatgjatë në zonën Prishtinë-Lipjan-Çagllavicë.
+Audienca kryesore janë të rinjtë, familjet, investitorët privatë, bizneset dhe institucionet që kërkojnë truall, pllac, toka në shitje ose prona të volitshme për investim afatgjatë.
 
-## Lokacioni
+## Prona në shitje
+
+1. Lagje Rezidenciale — Parcelimi 3D (Gllavicë, Prishtinë): 18 parcela P+1, 5–10 ari secila, çmim referent 5,000 EUR/ari, nga 25,000 EUR. Masterplan interaktiv dhe inventar i plotë në faqe.
+2. Tokë në Lebanë (Prishtinë): 29 ari, 6,000 EUR/ari, totali 174,000 EUR. Numri kadastral P-71914043-00058-2. Maps: https://maps.app.goo.gl/thzohJLRkvWgcTsGA
+3. Tokë në Gllavatin (Vushtrri): 37 ari (3 parcela fqinje), 2,000 EUR/ari, totali 74,000 EUR. Numrat kadastralë P-70202017-00025-0, P-70202017-00026-0, P-70202017-00027-0. Maps: https://goo.gl/maps/fMWXRLxi2hnZ4B4U8
+4. Tokë në Devë (Gjakovë): 12 ari, 2,500 EUR/ari, totali 30,000 EUR. Numri kadastral P-70705020-00705-0. Maps: https://maps.app.goo.gl/Gy2vbFkA4Lytz6kE8
+5. Tokë në Budrikë e Epërme (Viti): 67 ari, 500 EUR/ari, totali 33,500 EUR. Numri kadastral P-70101012-00924-0. Maps: https://maps.app.goo.gl/ycJXRL9VyCURLcmE9
+6. Tokë në Zhegër (Gjilan): 28 ari, 1,000 EUR/ari, totali 28,000 EUR. Numri kadastral P-70403026-04304-0. Maps: https://maps.app.goo.gl/PLacas2dZXb7FDHD6
+
+## Lokacioni i lagjes rezidenciale
 
 - Destinacioni: Rr. Adem Gllavica
 - Koordinatat: 42.489118, 21.194240
@@ -12,7 +21,7 @@ Audienca kryesore janë të rinjtë, familjet, investitorët privatë, bizneset 
 - Distanca prezantuese: rreth 17 km
 - Zona e kërkimit: Gllavicë, Çagllavicë, Prishtinë, Lipjan
 
-## Inventari
+## Inventari i lagjes
 
 - Gjithsej: 18 parcela
 - Në dispozicion: 8 parcela
@@ -25,6 +34,11 @@ Parcela në dispozicion përfshijnë P2, P4, P5, P6, P8, P10, P11 dhe P13. Parce
 
 - truall në Prishtinë
 - parcela në Prishtinë
+- toka në shitje Lebanë
+- tokë në shitje Gjakovë (Devë)
+- tokë në shitje Gjilan (Zhegër)
+- tokë në shitje Viti (Budrikë e Epërme)
+- tokë në shitje Vushtrri (Gllavatin)
 - truall në Lipjan
 - parcela në Çagllavicë
 - toka në Gllavicë

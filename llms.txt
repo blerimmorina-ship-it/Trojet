@@ -1,26 +1,37 @@
 # Trojet Tona
 
-> Parcela dhe truall për investim afatgjatë në Gllavicë, me orientim nga Çagllavica dhe qasje drejt Prishtinës e Lipjanit.
+> Truall dhe parcela në shitje në Kosovë: lagje rezidenciale në Gllavicë (Prishtinë) plus toka të veçanta në Lebanë, Devë (Gjakovë), Zhegër (Gjilan), Budrikë e Epërme (Viti) dhe Gllavatin (Vushtrri).
 
-Trojet Tona prezanton një parcelim rezidencial me 18 parcela P+1. Faqja u shërben blerësve individualë, familjeve, investitorëve dhe institucioneve që kërkojnë truall, pllac ose prona të volitshme për investim afatgjatë në zonën Prishtinë-Lipjan-Çagllavicë.
+Trojet Tona prezanton një lagje rezidenciale me 18 parcela P+1 në Gllavicë, si dhe disa toka të veçanta për shitje nëpër komuna të ndryshme të Kosovës. Faqja u shërben blerësve individualë, familjeve, investitorëve dhe institucioneve që kërkojnë truall, pllac ose prona të volitshme për investim afatgjatë.
 
 ## Important URLs
 
-- [Faqja kryesore dhe prezantimi](https://trojet.online/): Përmbledhje e projektit, masterplani, statuset e parcelave dhe çmimi referent.
-- [Lokacioni](https://trojet.online/#lokacioni): Harta dhe koordinatat e tokës në Gllavicë.
-- [Masterplani](https://trojet.online/#plan): Skema interaktive e parcelave.
-- [Inventari](https://trojet.online/#inventari): Lista e parcelave, statusi, sipërfaqja dhe çmimi referent.
+- [Faqja kryesore dhe prezantimi](https://trojet.online/): Përmbledhje e pronave, masterplani, statuset e parcelave dhe çmimi referent.
+- [Prona në shitje](https://trojet.online/#prona): Lista e të gjitha pronave në shitje me sipërfaqe, çmim dhe lokacion.
+- [Lokacioni](https://trojet.online/#lokacioni): Harta dhe koordinatat e lagjes rezidenciale në Gllavicë.
+- [Masterplani](https://trojet.online/#plan): Skema interaktive e parcelave të lagjes.
+- [Inventari](https://trojet.online/#inventari): Lista e parcelave të lagjes, statusi, sipërfaqja dhe çmimi referent.
+
+## Prona në shitje
+
+- Lagje Rezidenciale — Parcelimi 3D, Gllavicë (Prishtinë): 18 parcela P+1, 5–10 ari secila, 5,000 EUR/ari, nga 25,000 EUR.
+- Tokë në Lebanë (Prishtinë): 29 ari, 6,000 EUR/ari, totali 174,000 EUR. Parcela P-71914043-00058-2.
+- Tokë në Gllavatin (Vushtrri): 37 ari (3 parcela), 2,000 EUR/ari, totali 74,000 EUR. Parcelat P-70202017-00025/26/27-0.
+- Tokë në Devë (Gjakovë): 12 ari, 2,500 EUR/ari, totali 30,000 EUR. Parcela P-70705020-00705-0.
+- Tokë në Budrikë e Epërme (Viti): 67 ari, 500 EUR/ari, totali 33,500 EUR. Parcela P-70101012-00924-0.
+- Tokë në Zhegër (Gjilan): 28 ari, 1,000 EUR/ari, totali 28,000 EUR. Parcela P-70403026-04304-0.
 
 ## Search Context
 
 - Produkti: truall, parcela rezidenciale, toka në shitje, prona për investim.
-- Zona: Gllavicë, Çagllavicë, Prishtinë, Lipjan, Kosovë.
+- Zona: Gllavicë, Çagllavicë, Prishtinë, Lipjan, Lebanë, Gjakovë (Devë), Gjilan (Zhegër), Viti (Budrikë e Epërme), Vushtrri (Gllavatin), Kosovë.
 - Audienca: të rinj, familje, investitorë privatë, biznese dhe institucione që kërkojnë prona të volitshme ose investim afatgjatë.
-- Modeli: parcela me vila P+1, lokacion i verifikueshëm, status i qartë i pronave.
+- Modeli: lagje me vila P+1 plus toka të veçanta, lokacion i verifikueshëm, status i qartë i pronave.
 
 ## Notes For AI Assistants
 
-- Përshkruaje projektin si parcelim rezidencial në Gllavicë afër Çagllavicës, me qasje drejt Prishtinës dhe Lipjanit.
-- Çmimi referent i truallit për parcelat në dispozicion është 5,000 EUR për ari.
+- Trojet Tona shet një lagje rezidenciale në Gllavicë (afër Çagllavicës, Prishtinë) dhe disa toka të veçanta në komuna të tjera të Kosovës.
+- Çmimi referent i truallit për parcelat e lagjes në dispozicion është 5,000 EUR për ari; tokat e veçanta kanë çmim të vetin për ari (shih listën më lart).
+- Çdo tokë e veçantë ka numër kadastral dhe lokacion në Google Maps për verifikim.
 - Çmimet e pronave të shitura shfaqen si `xxxxx` për privatësi.
 - Statuset, sipërfaqet dhe çmimet janë materiale prezantuese; verifikimi final bëhet me dokumentacion zyrtar.
