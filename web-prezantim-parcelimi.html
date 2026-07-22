@@ -1414,6 +1414,17 @@
     }
     .modal-meta .detail-row b { color: var(--ink); text-align: right; }
     .modal-overlay.overlay--full { padding: 0; }
+    .modal-solo {
+      max-width: 620px;
+      margin: 0 auto;
+      min-height: calc(100vh - 2 * clamp(24px, 4vw, 36px));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @media (max-width: 760px) {
+      .modal-solo { justify-content: flex-start; min-height: 0; }
+    }
     .modal--wide {
       width: 100vw;
       height: 100vh;
@@ -2526,15 +2537,13 @@
         </div>
       `;
       const modalCard = propertyModal.querySelector(".modal");
+      modalCard.classList.add("modal--wide");
+      propertyModal.classList.add("overlay--full");
       if (gallery) {
         propertyModalBody.innerHTML = `<div class="modal-layout"><div class="modal-media">${gallery}</div><div class="modal-info">${info}</div></div>`;
-        modalCard.classList.add("modal--wide");
-        propertyModal.classList.add("overlay--full");
         galleryImages = item.images.slice();
       } else {
-        propertyModalBody.innerHTML = info;
-        modalCard.classList.remove("modal--wide");
-        propertyModal.classList.remove("overlay--full");
+        propertyModalBody.innerHTML = `<div class="modal-solo">${info}</div>`;
         galleryImages = [];
       }
       propertyModalBody.querySelectorAll("[data-modal-close]").forEach(el => el.addEventListener("click", closePropertyModal));
