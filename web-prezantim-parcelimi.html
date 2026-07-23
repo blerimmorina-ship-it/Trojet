@@ -2,7 +2,7 @@
 <html lang="sq">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Trojet Tona | Truall dhe Parcela në Shitje — Prishtinë, Gjakovë, Gjilan, Viti, Vushtrri</title>
   <meta name="description" content="Parcela dhe truall në shitje në Kosovë: lagje rezidenciale në Gllavicë (Prishtinë) plus toka të veçanta në Lebanë, Devë (Gjakovë), Zhegër (Gjilan), Budrikë e Epërme (Viti) dhe Gllavatin (Vushtrri). Numër kadastral, lokacion dhe çmim referent për secilën pronë.">
   <meta name="robots" content="index, follow, max-image-preview:large">
@@ -1358,6 +1358,15 @@
       cursor: pointer;
       font-size: 20px;
       line-height: 1;
+      z-index: 60;
+    }
+    /* Fullscreen modal: pin the close button to the viewport corner and keep it
+       clear of iOS/Android notches and status bars via the safe-area insets. */
+    .overlay--full .modal-close {
+      position: fixed;
+      top: calc(12px + env(safe-area-inset-top, 0px));
+      right: calc(12px + env(safe-area-inset-right, 0px));
+      box-shadow: 0 2px 10px rgba(14, 24, 22, .18);
     }
     .modal-close:hover { color: var(--ink); border-color: #b9c2bd; }
     .modal-body .property-kicker { display: inline-flex; }
@@ -1430,6 +1439,8 @@
       height: 100vh;
       max-height: 100vh;
       border-radius: 0;
+      padding-top: calc(clamp(24px, 4vw, 36px) + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(clamp(24px, 4vw, 36px) + env(safe-area-inset-bottom, 0px));
     }
     .modal--wide .modal-media .modal-gallery-main {
       aspect-ratio: auto;
@@ -2473,6 +2484,7 @@
 
     let galleryImages = [];
     let galleryIndex = 0;
+    let modalHistoryPushed = false;
 
     function setGalleryImage(index) {
       if (!galleryImages.length) return;
@@ -2546,7 +2558,7 @@
         propertyModalBody.innerHTML = `<div class="modal-solo">${info}</div>`;
         galleryImages = [];
       }
-      propertyModalBody.querySelectorAll("[data-modal-close]").forEach(el => el.addEventListener("click", closePropertyModal));
+      propertyModalBody.querySelectorAll("[data-modal-close]").forEach(el => el.addEventListener("click", () => closePropertyModal()));
       if (galleryImages.length) {
         const galleryMain = propertyModalBody.querySelector("#modalGalleryMain");
         if (galleryMain) galleryMain.addEventListener("click", galleryNext);
@@ -2564,13 +2576,29 @@
       propertyModal.classList.add("open");
       propertyModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
+      // Push a history entry so the device Back button (Android/iOS) closes the
+      // modal instead of leaving the page.
+      if (!modalHistoryPushed) {
+        history.pushState({ propertyModal: true }, "");
+        modalHistoryPushed = true;
+      }
     }
 
-    function closePropertyModal() {
+    function closePropertyModal(fromPopstate) {
       propertyModal.classList.remove("open");
       propertyModal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
+      if (modalHistoryPushed) {
+        modalHistoryPushed = false;
+        // If the close came from a real Back navigation the entry is already
+        // gone; otherwise pop the entry we pushed on open.
+        if (fromPopstate !== true) history.back();
+      }
     }
+
+    window.addEventListener("popstate", () => {
+      if (propertyModal.classList.contains("open")) closePropertyModal(true);
+    });
 
     propertyModal.addEventListener("click", event => {
       if (event.target === propertyModal || event.target.closest(".modal-close")) closePropertyModal();
