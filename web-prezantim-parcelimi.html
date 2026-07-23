@@ -2534,7 +2534,6 @@
 
     let galleryImages = [];
     let galleryIndex = 0;
-    let modalHistoryPushed = false;
 
     function setGalleryImage(index) {
       if (!galleryImages.length) return;
@@ -2555,7 +2554,7 @@
     function galleryNext() { setGalleryImage(galleryIndex + 1); }
     function galleryPrev() { setGalleryImage(galleryIndex - 1); }
 
-    function openPropertyModal(key) {
+    function openPropertyModal(key, fromHistory) {
       const item = properties.find(entry => entry.key === key);
       if (!item) return;
       const planBtn = item.lagje
@@ -2633,28 +2632,35 @@
       propertyModal.classList.add("open");
       propertyModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
-      // Push a history entry so the device Back button (Android/iOS) closes the
-      // modal instead of leaving the page.
-      if (!modalHistoryPushed) {
-        history.pushState({ propertyModal: true }, "");
-        modalHistoryPushed = true;
-      }
+      // Push a shareable URL (e.g. #prona-lebane) so the property is deep-linkable
+      // and the device Back button (Android/iOS) closes the modal. Skip when the
+      // open was itself triggered by history navigation.
+      if (!fromHistory) history.pushState({ propertyModal: key }, "", "#prona-" + key);
+    }
+
+    function keyFromHash() {
+      const match = location.hash.match(/^#prona-(.+)$/);
+      return match && properties.some(entry => entry.key === match[1]) ? match[1] : null;
     }
 
     function closePropertyModal(fromPopstate) {
       propertyModal.classList.remove("open");
       propertyModal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
-      if (modalHistoryPushed) {
-        modalHistoryPushed = false;
-        // If the close came from a real Back navigation the entry is already
-        // gone; otherwise pop the entry we pushed on open.
-        if (fromPopstate !== true) history.back();
+      if (fromPopstate === true) return;
+      if (history.state && history.state.propertyModal) {
+        history.back();
+      } else if (location.hash) {
+        // Directly-loaded deep link: strip the hash without adding history.
+        history.replaceState(null, "", location.pathname + location.search);
       }
     }
 
     window.addEventListener("popstate", () => {
-      if (propertyModal.classList.contains("open")) closePropertyModal(true);
+      const key = keyFromHash();
+      const open = propertyModal.classList.contains("open");
+      if (key && !open) openPropertyModal(key, true);
+      else if (!key && open) closePropertyModal(true);
     });
 
     propertyModal.addEventListener("click", event => {
@@ -2672,6 +2678,11 @@
     renderPlan();
     renderTable();
     selectParcel("P2");
+
+    // Open a property directly when the page is loaded with a deep link
+    // (e.g. trojet.online/#prona-lebane) — used by the Facebook posts.
+    const initialPropertyKey = keyFromHash();
+    if (initialPropertyKey) openPropertyModal(initialPropertyKey, true);
 
     window.addEventListener("resize", () => {
       placeDetailPanel(document.querySelector(".plot.active"));
