@@ -1052,6 +1052,20 @@
       border-color: var(--gold);
       box-shadow: 0 20px 44px rgba(184, 135, 61, .16);
     }
+    .property-thumb {
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--soft);
+    }
+    .property-thumb img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .35s ease;
+    }
+    .property-card:hover .property-thumb img { transform: scale(1.05); }
     .property-top {
       display: flex;
       align-items: center;
@@ -2313,6 +2327,7 @@
         total: "nga €25,000",
         ref: "Masterplan 3D · 18 parcela P+1",
         desc: "Lagje rezidenciale me 18 parcela për vila P+1 në Gllavicë. Status i qartë i pronave, masterplan interaktiv dhe inventar transparent — 8 parcela aktualisht në dispozicion.",
+        thumb: "web-prezantim-assets/render-parcelat-reale-premium.png",
         mapHref: "https://maps.app.goo.gl/Mey8mBYM8AiZmSuF7",
         planHref: "#plan"
       },
@@ -2327,6 +2342,7 @@
         priceLabel: "Çmimi",
         total: "€440,000",
         ref: "Rr. Gaspër Karaçi (tek ish-poligoni), Gjakovë",
+        thumb: "web-prezantim-assets/shtepia/shtepia-01.jpg",
         desc: "Shtëpi moderne e ndërtuar para 5 vitesh në rrugën \"Gaspër Karaçi\" (tek ish-poligoni), Gjakovë. 345 m² banim — garazhë, përdhesë, kati i parë dhe terasë — me bazament e leje ndërtimi për katin e dytë. E legalizuar, me dokumente të kompletuara dhe bartje të menjëhershme të pronësisë.",
         modalFigures: [
           { value: "345 m²", label: "Sipërfaqja banimi" },
@@ -2395,6 +2411,8 @@
         total: "€174,000",
         ref: "P-71914043-00058-2",
         desc: "Truall në zonën e Prishtinës (Lebanë), i përshtatshëm për investim të shpejtë.",
+        thumb: "web-prezantim-assets/parcela/lebane-thumb.jpg",
+        images: ["web-prezantim-assets/parcela/lebane-parcela.jpg"],
         mapHref: "https://maps.app.goo.gl/thzohJLRkvWgcTsGA"
       },
       {
@@ -2406,6 +2424,8 @@
         total: "€74,000",
         ref: "3 parcela · P-70202017-00025/26/27-0",
         desc: "Tri parcela fqinje me sipërfaqe totale prej 37 ari.",
+        thumb: "web-prezantim-assets/parcela/gllavatin-thumb.jpg",
+        images: ["web-prezantim-assets/parcela/gllavatin-parcela.jpg"],
         mapHref: "https://goo.gl/maps/fMWXRLxi2hnZ4B4U8"
       },
       {
@@ -2417,6 +2437,8 @@
         total: "€30,000",
         ref: "P-70705020-00705-0",
         desc: "Lokacion i kërkuar, i përshtatshëm për investim të shpejtë.",
+        thumb: "web-prezantim-assets/parcela/deve-thumb.jpg",
+        images: ["web-prezantim-assets/parcela/deve-parcela.jpg"],
         mapHref: "https://maps.app.goo.gl/Gy2vbFkA4Lytz6kE8"
       },
       {
@@ -2428,6 +2450,8 @@
         total: "€33,500",
         ref: "P-70101012-00924-0",
         desc: "Sipërfaqe e madhe livadhi, me çmim të volitshëm për ari.",
+        thumb: "web-prezantim-assets/parcela/budrike-thumb.jpg",
+        images: ["web-prezantim-assets/parcela/budrike-parcela.jpg"],
         mapHref: "https://maps.app.goo.gl/ycJXRL9VyCURLcmE9"
       },
       {
@@ -2439,6 +2463,8 @@
         total: "€28,000",
         ref: "P-70403026-04304-0",
         desc: "Arë bujqësore me qasje rrugore, e përshtatshme për investim.",
+        thumb: "web-prezantim-assets/parcela/zheger-thumb.jpg",
+        images: ["web-prezantim-assets/parcela/zheger-parcela.jpg"],
         mapHref: "https://maps.app.goo.gl/PLacas2dZXb7FDHD6"
       }
     ];
@@ -2457,8 +2483,12 @@
 
     function propertyCard(item) {
       const note = item.areaNote ? ` · ${item.areaNote}` : "";
+      const thumb = item.thumb
+        ? `<div class="property-thumb"><img src="${item.thumb}" alt="${item.title}" loading="lazy"></div>`
+        : "";
       return `
         <button type="button" class="property-card" data-key="${item.key}">
+          ${thumb}
           <div class="property-top">
             <span class="property-kicker">${item.kicker}</span>
             <span class="chip free">Në shitje</span>
@@ -2511,18 +2541,25 @@
       const planBtn = item.lagje
         ? `<a class="primary" href="${item.planHref}" data-modal-close>Shiko masterplanin 3D</a>`
         : "";
+      const multiImage = item.images && item.images.length > 1;
+      const galleryNav = multiImage
+        ? `<button type="button" class="gallery-nav gallery-prev" aria-label="Foto e mëparshme">‹</button>
+            <button type="button" class="gallery-nav gallery-next" aria-label="Foto tjetër">›</button>
+            <span class="gallery-counter"><span id="galleryCounter">1</span> / ${item.images.length}</span>`
+        : "";
+      const galleryThumbs = multiImage
+        ? `<div class="modal-thumbs">
+            ${item.images.map((src, i) => `<button type="button" class="modal-thumb${i === 0 ? " active" : ""}" data-index="${i}"><img src="${src}" alt="${item.title} — foto ${i + 1}" loading="lazy"></button>`).join("")}
+          </div>`
+        : "";
       const gallery = item.images && item.images.length
         ? `
         <div class="modal-gallery">
           <div class="modal-gallery-stage">
             <img class="modal-gallery-main" id="modalGalleryMain" src="${item.images[0]}" alt="${item.title}" loading="lazy">
-            <button type="button" class="gallery-nav gallery-prev" aria-label="Foto e mëparshme">‹</button>
-            <button type="button" class="gallery-nav gallery-next" aria-label="Foto tjetër">›</button>
-            <span class="gallery-counter"><span id="galleryCounter">1</span> / ${item.images.length}</span>
+            ${galleryNav}
           </div>
-          <div class="modal-thumbs">
-            ${item.images.map((src, i) => `<button type="button" class="modal-thumb${i === 0 ? " active" : ""}" data-index="${i}"><img src="${src}" alt="${item.title} — foto ${i + 1}" loading="lazy"></button>`).join("")}
-          </div>
+          ${galleryThumbs}
         </div>` : "";
       const figures = (item.modalFigures || [
         { value: item.area, label: "Sipërfaqja" },
