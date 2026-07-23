@@ -1085,6 +1085,20 @@
       text-transform: uppercase;
       letter-spacing: .02em;
     }
+    .property-city {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(184, 135, 61, .12);
+      color: var(--gold-dark);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
     .property-card h3 {
       margin: 0;
       font-family: Manrope, Inter, sans-serif;
@@ -2486,12 +2500,14 @@
       const thumb = item.thumb
         ? `<div class="property-thumb"><img src="${item.thumb}" alt="${item.title}" loading="lazy"></div>`
         : "";
+      const [place, ...cityParts] = item.kicker.split("·").map(part => part.trim());
+      const city = cityParts.join(" · ");
       return `
         <button type="button" class="property-card" data-key="${item.key}">
           ${thumb}
           <div class="property-top">
-            <span class="property-kicker">${item.kicker}</span>
-            <span class="chip free">Në shitje</span>
+            <span class="property-kicker">${place}</span>
+            ${city ? `<span class="property-city">${city}</span>` : ""}
           </div>
           <h3>${item.title}</h3>
           <div class="property-meta">
