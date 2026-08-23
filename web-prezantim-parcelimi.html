@@ -2529,7 +2529,7 @@
         perAri: "€2,000",
         total: "€74,000",
         ref: "3 parcela · P-70202017-00025/26/27-0",
-        desc: "Tri parcela fqinje me sipërfaqe totale prej 37 ari.",
+        desc: "Tri parcela fqinje me sipërfaqe totale prej 37 ari. Blerë nga AKP (Agjencia Kosovare e Privatizimit) në proces të rregullt të privatizimit.",
         thumb: "web-prezantim-assets/parcela/gllavatin-thumb.jpg",
         images: ["web-prezantim-assets/parcela/gllavatin-parcela.jpg"],
         mapHref: "https://goo.gl/maps/fMWXRLxi2hnZ4B4U8"
@@ -2542,7 +2542,7 @@
         perAri: "€2,500",
         total: "€30,000",
         ref: "P-70705020-00705-0",
-        desc: "Lokacion i kërkuar, i përshtatshëm për investim të shpejtë.",
+        desc: "Lokacion i kërkuar, i përshtatshëm për investim të shpejtë. Blerë nga AKP (Agjencia Kosovare e Privatizimit) në proces të rregullt të privatizimit.",
         thumb: "web-prezantim-assets/parcela/deve-thumb.jpg",
         images: ["web-prezantim-assets/parcela/deve-parcela.jpg"],
         mapHref: "https://maps.app.goo.gl/Gy2vbFkA4Lytz6kE8"
@@ -2555,7 +2555,7 @@
         perAri: "€500",
         total: "€33,500",
         ref: "P-70101012-00924-0",
-        desc: "Sipërfaqe e madhe livadhi, me çmim të volitshëm për ari.",
+        desc: "Sipërfaqe e madhe livadhi, me çmim të volitshëm për ari. Blerë nga AKP (Agjencia Kosovare e Privatizimit) në proces të rregullt të privatizimit.",
         thumb: "web-prezantim-assets/parcela/budrike-thumb.jpg",
         images: ["web-prezantim-assets/parcela/budrike-parcela.jpg"],
         mapHref: "https://maps.app.goo.gl/ycJXRL9VyCURLcmE9"
@@ -2568,7 +2568,7 @@
         perAri: "€1,000",
         total: "€28,000",
         ref: "P-70403026-04304-0",
-        desc: "Arë bujqësore me qasje rrugore, e përshtatshme për investim.",
+        desc: "Arë bujqësore me qasje rrugore, e përshtatshme për investim. Blerë nga AKP (Agjencia Kosovare e Privatizimit) në proces të rregullt të privatizimit.",
         thumb: "web-prezantim-assets/parcela/zheger-thumb.jpg",
         images: ["web-prezantim-assets/parcela/zheger-parcela.jpg"],
         mapHref: "https://maps.app.goo.gl/PLacas2dZXb7FDHD6"
@@ -2780,7 +2780,7 @@
       const item = properties.find(entry => entry.key === key);
       if (!item || item.hidden) return;
       const planBtn = item.lagje
-        ? `<a class="primary" href="${item.planHref}" data-modal-close>Shiko masterplanin 3D</a>`
+        ? `<a class="primary" href="${item.planHref}" data-goto-plan>Shiko masterplanin 3D</a>`
         : "";
       const multiImage = item.images && item.images.length > 1;
       const galleryNav = multiImage
@@ -2838,6 +2838,25 @@
         galleryImages = [];
       }
       propertyModalBody.querySelectorAll("[data-modal-close]").forEach(el => el.addEventListener("click", () => closePropertyModal()));
+      // Mbyll modalin dhe rrëshqit te masterplani (#plan) pa e ngecur history-në.
+      // E mbyllim direkt (jo history.back, që përndryshe popstate e rihap modalin),
+      // pastrojmë URL-në me replaceState që Back të mos e rikthejë, pastaj rrëshqasim.
+      // href-i mbahet për fallback pa JS.
+      propertyModalBody.querySelectorAll("[data-goto-plan]").forEach(el => el.addEventListener("click", event => {
+        event.preventDefault();
+        const target = document.querySelector(el.getAttribute("href") || "#plan");
+        propertyModal.classList.remove("open");
+        propertyModal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        if (history.state && history.state.propertyModal) {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+        if (target) {
+          requestAnimationFrame(() => {
+            setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+          });
+        }
+      }));
       propertyModalBody.querySelectorAll("[data-share]").forEach(button => {
         button.addEventListener("click", event => {
           event.stopPropagation();
