@@ -1596,6 +1596,77 @@
       background: var(--soft);
       cursor: pointer;
     }
+    /* Lightbox: në mobil, klikimi mbi foto e hap atë në ekran të plotë. */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      display: none;
+      background: #000;
+      touch-action: none;
+    }
+    .lightbox.open { display: block; }
+    .lightbox img {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: calc(12px + env(safe-area-inset-top, 0px));
+      right: 12px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,.16);
+      color: #fff;
+      font-size: 26px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,.16);
+      color: #fff;
+      font-size: 30px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .lightbox-prev { left: 10px; }
+    .lightbox-next { right: 10px; }
+    .lightbox-counter {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 2;
+    }
     .gallery-nav {
       position: absolute;
       top: 50%;
@@ -2800,6 +2871,79 @@
     function galleryNext() { setGalleryImage(galleryIndex + 1); }
     function galleryPrev() { setGalleryImage(galleryIndex - 1); }
 
+    // ---- Lightbox (ekran i plotë) ----
+    // Në mobil klikimi mbi foton kryesore e hap në ekran të plotë; në desktop
+    // sillet si më parë (kalon te fotoja tjetër), sepse aty ka hapësirë të mjaftueshme.
+    let lightboxEl = null;
+    let lightboxIndex = 0;
+
+    function isMobileViewport() {
+      return window.matchMedia("(max-width: 760px)").matches;
+    }
+
+    function renderLightbox() {
+      if (!lightboxEl || !galleryImages.length) return;
+      const multi = galleryImages.length > 1;
+      lightboxEl.querySelector(".lightbox-img").src = galleryImages[lightboxIndex];
+      const counter = lightboxEl.querySelector(".lightbox-counter");
+      counter.textContent = `${lightboxIndex + 1} / ${galleryImages.length}`;
+      counter.style.display = multi ? "" : "none";
+      lightboxEl.querySelectorAll(".lightbox-nav").forEach(b => { b.style.display = multi ? "" : "none"; });
+    }
+
+    function lightboxStep(delta) {
+      if (!galleryImages.length) return;
+      lightboxIndex = (lightboxIndex + delta + galleryImages.length) % galleryImages.length;
+      renderLightbox();
+    }
+
+    function closeLightbox() {
+      if (!lightboxEl) return;
+      lightboxEl.classList.remove("open");
+      // Modali vetë e mban overflow-in e trupit të bllokuar; e rikthejmë atë gjendje.
+      document.body.style.overflow = propertyModal.classList.contains("open") ? "hidden" : "";
+      // Sinkronizo galerinë e modalit me foton e fundit të parë.
+      setGalleryImage(lightboxIndex);
+    }
+
+    function openLightbox(index) {
+      if (!galleryImages.length) return;
+      if (!lightboxEl) {
+        lightboxEl = document.createElement("div");
+        lightboxEl.className = "lightbox";
+        lightboxEl.innerHTML = `
+          <img class="lightbox-img" alt="">
+          <button type="button" class="lightbox-close" aria-label="Mbyll">✕</button>
+          <button type="button" class="lightbox-nav lightbox-prev" aria-label="Foto e mëparshme">‹</button>
+          <button type="button" class="lightbox-nav lightbox-next" aria-label="Foto tjetër">›</button>
+          <span class="lightbox-counter"></span>
+        `;
+        document.body.appendChild(lightboxEl);
+
+        lightboxEl.querySelector(".lightbox-close").addEventListener("click", closeLightbox);
+        lightboxEl.querySelector(".lightbox-prev").addEventListener("click", e => { e.stopPropagation(); lightboxStep(-1); });
+        lightboxEl.querySelector(".lightbox-next").addEventListener("click", e => { e.stopPropagation(); lightboxStep(1); });
+        // Prekja/klikimi diku tjetër e mbyll.
+        lightboxEl.addEventListener("click", event => {
+          if (event.target.closest(".lightbox-nav")) return;
+          closeLightbox();
+        });
+        // Rrëshqitja majtas/djathtas ndërron foton.
+        let startX = null;
+        lightboxEl.addEventListener("touchstart", e => { startX = e.touches[0].clientX; }, { passive: true });
+        lightboxEl.addEventListener("touchend", e => {
+          if (startX === null) return;
+          const dx = e.changedTouches[0].clientX - startX;
+          startX = null;
+          if (Math.abs(dx) > 45) lightboxStep(dx < 0 ? 1 : -1);
+        }, { passive: true });
+      }
+      lightboxIndex = index;
+      renderLightbox();
+      lightboxEl.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
     function openPropertyModal(key, fromHistory) {
       const item = properties.find(entry => entry.key === key);
       if (!item || item.hidden) return;
@@ -2889,7 +3033,10 @@
       });
       if (galleryImages.length) {
         const galleryMain = propertyModalBody.querySelector("#modalGalleryMain");
-        if (galleryMain) galleryMain.addEventListener("click", galleryNext);
+        if (galleryMain) galleryMain.addEventListener("click", () => {
+          if (isMobileViewport()) openLightbox(galleryIndex);
+          else galleryNext();
+        });
         propertyModalBody.querySelectorAll(".modal-thumb").forEach(thumb => {
           thumb.addEventListener("click", () => setGalleryImage(Number(thumb.dataset.index)));
         });
@@ -2917,6 +3064,7 @@
 
     function closePropertyModal(fromPopstate) {
       closeShareMenu();
+      if (lightboxEl) lightboxEl.classList.remove("open");
       propertyModal.classList.remove("open");
       propertyModal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
@@ -2941,6 +3089,13 @@
     });
     document.addEventListener("keydown", event => {
       if (event.key === "Escape" && shareMenuEl) { closeShareMenu(); return; }
+      // Lightbox-i është mbi modalin: merr tastet i pari.
+      if (lightboxEl && lightboxEl.classList.contains("open")) {
+        if (event.key === "Escape") { event.preventDefault(); closeLightbox(); }
+        else if (event.key === "ArrowRight" || event.key === "ArrowDown") { event.preventDefault(); lightboxStep(1); }
+        else if (event.key === "ArrowLeft" || event.key === "ArrowUp") { event.preventDefault(); lightboxStep(-1); }
+        return;
+      }
       if (!propertyModal.classList.contains("open")) return;
       if (event.key === "Escape") { closePropertyModal(); return; }
       if (!galleryImages.length) return;
