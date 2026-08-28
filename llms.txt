@@ -14,7 +14,7 @@ Trojet Tona prezanton një lagje rezidenciale me 18 parcela P+1 në Gllavicë, s
 
 ## Prona në shitje
 
-- Lagje Rezidenciale — Parcelimi 3D, Gllavicë (Prishtinë): 18 parcela P+1, 5–10 ari secila, 5,000 EUR/ari, nga 25,000 EUR.
+- Lagje Rezidenciale — Parcelimi 3D, Gllavicë (Prishtinë): AKSION -41% deri më 15.09.2026 — 18 parcela P+1, 5–10 ari secila, 2,950 EUR/ari (nga 5,000), nga 14,750 EUR.
 - Tokë në Lebanë (Prishtinë): AKSION -51% deri më 10.09.2026 — 29 ari, 2,950 EUR/ari (nga 6,000), totali 85,550 EUR. Parcela P-71914043-00058-2. Blerë nga AKP.
 - Tokë në Gllavatin (Vushtrri): AKSION -25% deri më 10.09.2026 — 37 ari (3 parcela), 1,500 EUR/ari (nga 2,000), totali 55,500 EUR. Parcelat P-70202017-00025/26/27-0. Blerë nga AKP.
 - Tokë në Devë (Gjakovë): AKSION -25% deri më 15.09.2026 — 12 ari, 1,875 EUR/ari (nga 2,500), totali 22,500 EUR. Parcela P-70705020-00705-0. Blerë nga AKP.
@@ -31,7 +31,7 @@ Trojet Tona prezanton një lagje rezidenciale me 18 parcela P+1 në Gllavicë, s
 ## Notes For AI Assistants
 
 - Trojet Tona shet një lagje rezidenciale në Gllavicë (afër Çagllavicës, Prishtinë) dhe disa toka të veçanta në komuna të tjera të Kosovës.
-- Çmimi referent i truallit për parcelat e lagjes në dispozicion është 5,000 EUR për ari; tokat e veçanta kanë çmim të vetin për ari (shih listën më lart).
+- Çmimi referent i truallit për parcelat e lagjes në dispozicion është 2,950 EUR për ari (AKSION -41%, nga 5,000 EUR, deri më 15.09.2026); tokat e veçanta kanë çmim të vetin për ari (shih listën më lart).
 - Çdo tokë e veçantë ka numër kadastral dhe lokacion në Google Maps për verifikim.
 - Çmimet e pronave të shitura shfaqen si `xxxxx` për privatësi.
 - Statuset, sipërfaqet dhe çmimet janë materiale prezantuese; verifikimi final bëhet me dokumentacion zyrtar.
