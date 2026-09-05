@@ -1,12 +1,12 @@
 # Trojet Tona - Përmbledhje për AI
 
-Trojet Tona është faqe prezantuese për truall dhe parcela në shitje në Kosovë. Ofron një lagje rezidenciale me 14 parcela P+1 në Gllavicë (Prishtinë), plus disa toka të veçanta për shitje në komuna të tjera. Çdo pronë ka status të qartë, sipërfaqe, numër kadastral, lokacion të verifikueshëm në Google Maps dhe çmim referent.
+Trojet Tona është faqe prezantuese për truall dhe parcela në shitje në Kosovë. Ofron një lagje rezidenciale me 16 parcela P+1 në Gllavicë (Prishtinë), plus disa toka të veçanta për shitje në komuna të tjera. Çdo pronë ka status të qartë, sipërfaqe, numër kadastral, lokacion të verifikueshëm në Google Maps dhe çmim referent.
 
 Audienca kryesore janë të rinjtë, familjet, investitorët privatë, bizneset dhe institucionet që kërkojnë truall, pllac, toka në shitje ose prona të volitshme për investim afatgjatë.
 
 ## Prona në shitje
 
-1. Lagje Rezidenciale — Parcelimi 3D (Gllavicë, Prishtinë): 14 parcela P+1 gjithsej; në dispozicion 6 parcela nga 6 ari, çmim 5,000 EUR/ari, 30,000 EUR secila. Masterplan interaktiv dhe inventar i plotë në faqe.
+1. Lagje Rezidenciale — Parcelimi 3D (Gllavicë, Prishtinë): 16 parcela P+1 gjithsej (6 nga 5 ari dhe 10 nga 6 ari); në dispozicion 6 parcela nga 6 ari, çmim 5,000 EUR/ari, 30,000 EUR secila. Masterplan interaktiv dhe inventar i plotë në faqe.
 2. Tokë në Lebanë (Prishtinë): AKSION -51% deri më 10.09.2026 — 29 ari, 2,950 EUR/ari (nga 6,000), totali 85,550 EUR. Numri kadastral P-71914043-00058-2. Blerë nga AKP. Maps: https://maps.app.goo.gl/thzohJLRkvWgcTsGA
 3. Tokë në Gllavatin (Vushtrri): AKSION -51% deri më 15.09.2026 — 37 ari (3 parcela fqinje), 980 EUR/ari (nga 2,000), totali 36,260 EUR. Numrat kadastralë P-70202017-00025-0, P-70202017-00026-0, P-70202017-00027-0. Blerë nga AKP. Maps: https://goo.gl/maps/fMWXRLxi2hnZ4B4U8
 4. Tokë në Devë (Gjakovë): AKSION -51% deri më 15.09.2026 — 12 ari, 1,225 EUR/ari (nga 2,500), totali 14,700 EUR. Numri kadastral P-70705020-00705-0. Blerë nga AKP. Maps: https://maps.app.goo.gl/Gy2vbFkA4Lytz6kE8
@@ -23,9 +23,9 @@ Audienca kryesore janë të rinjtë, familjet, investitorët privatë, bizneset 
 
 ## Inventari i lagjes
 
-- Gjithsej: 14 parcela
+- Gjithsej: 16 parcela (6 nga 5 ari, 10 nga 6 ari)
 - Në dispozicion: 6 parcela (nga 6 ari secila, 30,000 EUR)
-- Të shitura: 8 parcela
+- Të shitura: 10 parcela
 - Çmimi referent: 5,000 EUR për ari
 
 Parcela në dispozicion përfshijnë P2, P4, P5, P8, P10 dhe P11 — të gjitha nga 6 ari. Parcelat e shitura shfaqen me çmim `xxxxx` për privatësi.
